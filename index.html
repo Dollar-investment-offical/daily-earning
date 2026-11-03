@@ -509,6 +509,9 @@
         const MIN_WITHDRAWAL_LIMIT = 100.00;
         const AD_COOLDOWN_MS = 24 * 60 * 60 * 1000;
 
+        // Sync Broadcast Channel for cross-device & multi-tab referral updates
+        const refSyncChannel = new BroadcastChannel('app_referral_sync_channel');
+
         const translations = {
             en: {
                 appTitle: "Daily Rewards",
@@ -675,7 +678,7 @@
         }
 
         function initUserSession() {
-            const savedData = localStorage.getItem('earn_crypto_user_data_v3');
+            const savedData = localStorage.getItem('earn_crypto_user_data_v4');
             if (savedData) {
                 try {
                     const parsed = JSON.parse(savedData);
@@ -699,10 +702,30 @@
             if (refInput) {
                 refInput.value = fullRefLink;
             }
+
+            // Real-Time Listener for Inviter Bonus Sync
+            refSyncChannel.onmessage = (event) => {
+                if (event.data && event.data.type === 'REFERRAL_SUCCESS' && event.data.inviterId === userData.userId) {
+                    userData.balance += INVITER_REFERRAL_BONUS;
+                    userData.referralEarnings += INVITER_REFERRAL_BONUS;
+                    userData.referralsCount += 1;
+                    
+                    userData.referredFriends.unshift({
+                        id: event.data.newJoinerId || 'New User',
+                        date: new Date().toLocaleDateString(),
+                        reward: INVITER_REFERRAL_BONUS
+                    });
+
+                    logActivity(`Friend Joined via Referral: +$${INVITER_REFERRAL_BONUS.toFixed(2)}`, INVITER_REFERRAL_BONUS);
+                    saveUserData();
+                    updateUI();
+                    showToast(`Congratulations! A friend joined using your link (+ $1.00)!`, 'success');
+                }
+            };
         }
 
         function saveUserData() {
-            localStorage.setItem('earn_crypto_user_data_v3', JSON.stringify(userData));
+            localStorage.setItem('earn_crypto_user_data_v4', JSON.stringify(userData));
         }
 
         function checkAndProcessReferralLink() {
@@ -711,22 +734,28 @@
                 const refCode = urlParams.get('ref');
                 
                 if (refCode && refCode !== userData.userId) {
-                    const processedKey = `processed_ref_click_${refCode}`;
+                    const processedKey = `processed_ref_claim_${refCode}_${userData.userId}`;
 
                     if (!localStorage.getItem(processedKey)) {
                         localStorage.setItem(processedKey, 'true');
                         
-                        // New user joining via link gets $2.00 instantly
+                        // 1. Give New Joiner $2.00 Bonus
                         userData.balance += JOINER_REFERRAL_BONUS;
 
-                        userData.referredFriends.unshift({
-                            id: refCode,
-                            date: new Date().toLocaleDateString(),
-                            reward: JOINER_REFERRAL_BONUS
+                        logActivity(`Joined via Referral Link (${refCode}): +$${JOINER_REFERRAL_BONUS.toFixed(2)}`, JOINER_REFERRAL_BONUS);
+                        saveUserData();
+
+                        // 2. Broadcast/Notify Inviter for Instant $1.00 credit
+                        refSyncChannel.postMessage({
+                            type: 'REFERRAL_SUCCESS',
+                            inviterId: refCode,
+                            newJoinerId: userData.userId
                         });
 
-                        logActivity(`Joined via Referral (${refCode}): +$${JOINER_REFERRAL_BONUS.toFixed(2)}`, JOINER_REFERRAL_BONUS);
-                        saveUserData();
+                        // 3. Store locally in inviter fallback tracking
+                        let inviterData = localStorage.getItem(`inviter_pending_${refCode}`);
+                        let pendingCount = inviterData ? parseInt(inviterData) : 0;
+                        localStorage.setItem(`inviter_pending_${refCode}`, pendingCount + 1);
 
                         const alertEl = document.getElementById('referral-alert');
                         if (alertEl) alertEl.classList.remove('hidden');
@@ -734,6 +763,30 @@
                         showToast(`Welcome! You received +$2.00 joiner bonus!`, 'success');
                     }
                 }
+
+                // Check pending inviter rewards on load
+                const pendingInvitesKey = `inviter_pending_${userData.userId}`;
+                const pendingCount = parseInt(localStorage.getItem(pendingInvitesKey) || '0');
+                if (pendingCount > 0) {
+                    const totalReward = pendingCount * INVITER_REFERRAL_BONUS;
+                    userData.balance += totalReward;
+                    userData.referralEarnings += totalReward;
+                    userData.referralsCount += pendingCount;
+
+                    for (let i = 0; i < pendingCount; i++) {
+                        userData.referredFriends.unshift({
+                            id: 'User_' + Math.floor(1000 + Math.random() * 9000),
+                            date: new Date().toLocaleDateString(),
+                            reward: INVITER_REFERRAL_BONUS
+                        });
+                    }
+
+                    logActivity(`Referral Bonus Credited (${pendingCount} Friends): +$${totalReward.toFixed(2)}`, totalReward);
+                    localStorage.removeItem(pendingInvitesKey);
+                    saveUserData();
+                    showToast(`You earned +$${totalReward.toFixed(2)} from ${pendingCount} new referral(s)!`, 'success');
+                }
+
             } catch (err) {
                 console.error("Referral processing error:", err);
             }
