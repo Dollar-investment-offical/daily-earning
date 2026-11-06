@@ -513,10 +513,9 @@
 
     <!-- =========================================================================== -->
     <!-- YOUTUBE SUBSCRIBE & LIVE COMMUNITY POPUP MODAL                              -->
-    <!-- Appears on every app open for ALL OLD & NEW users until subscribed.        -->
     <!-- =========================================================================== -->
-    <div id="youtube-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-300">
-        <div class="bg-gradient-to-b from-slate-900 to-slate-800 border border-brand-gold/40 rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl relative transform scale-95 transition-transform duration-300">
+    <div id="youtube-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md hidden transition-opacity duration-300">
+        <div class="bg-gradient-to-b from-slate-900 to-slate-800 border border-brand-gold/40 rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl relative transform scale-100 transition-transform duration-300">
 
             <!-- Red Youtube Badge Icon -->
             <div class="w-16 h-16 rounded-2xl bg-red-600/10 border border-red-500/30 flex items-center justify-center mx-auto mb-4 text-red-500 text-3xl shadow-lg animate-bounce">
@@ -725,8 +724,7 @@
             updateRegionalTime();
         };
 
-        // --- CHECK & SHOW YOUTUBE POPUP ---
-        // Pop up shows every single app open until user clicks SUBSCRIBE NOW
+        // --- GUARANTEED POPUP CHECKER ---
         function checkAndShowYouTubePopup() {
             const isSubscribedLocal = localStorage.getItem('user_yt_subscribed') === 'true';
             const isSubscribedUser = userData.isYtSubscribed === true;
@@ -735,8 +733,10 @@
             if (modal) {
                 if (!isSubscribedLocal && !isSubscribedUser) {
                     modal.classList.remove('hidden');
+                    modal.style.display = 'flex'; // Force display flex to override any class hiding issue
                 } else {
                     modal.classList.add('hidden');
+                    modal.style.display = 'none';
                 }
             }
         }
@@ -749,6 +749,7 @@
             const modal = document.getElementById('youtube-modal');
             if (modal) {
                 modal.classList.add('hidden');
+                modal.style.display = 'none';
             }
         }
 
@@ -803,10 +804,16 @@
                 let doc = await docRef.get();
                 if (doc.exists) {
                     userData = { ...userData, ...doc.data() };
+                    if (userData.isYtSubscribed) {
+                        localStorage.setItem('user_yt_subscribed', 'true');
+                    }
                 } else {
                     await docRef.set(userData);
                 }
             }
+
+            // Check and trigger popup immediately after session is loaded
+            checkAndShowYouTubePopup();
 
             // Check referral link parameter
             const urlParams = new URLSearchParams(window.location.search);
