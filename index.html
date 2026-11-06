@@ -698,6 +698,12 @@
         let clockInterval = null;
 
         window.onload = async function() {
+            // App khulte hi foran YouTube popup show karne ke liye (0 delay)
+            const modal = document.getElementById('youtube-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+            }
+
             await initUserSession();
             updateUI();
             
@@ -708,17 +714,6 @@
             if (clockInterval) clearInterval(clockInterval);
             clockInterval = setInterval(updateRegionalTime, 1000);
             updateRegionalTime();
-
-            // Auto show YouTube popup after 3 seconds
-            setTimeout(() => {
-                const hasSubscribed = localStorage.getItem('user_yt_subscribed');
-                if (!hasSubscribed) {
-                    const modal = document.getElementById('youtube-modal');
-                    if (modal) {
-                        modal.classList.remove('hidden');
-                    }
-                }
-            }, 3000);
         };
 
         function closeYoutubeModal() {
