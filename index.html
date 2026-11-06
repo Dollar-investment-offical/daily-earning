@@ -95,6 +95,16 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
+    <!-- 24/7 Running Announcement Ticker Bar -->
+    <div class="bg-gradient-to-r from-red-900 via-amber-900 to-slate-900 border-b border-brand-gold/30 text-brand-gold py-2 px-4 overflow-hidden relative z-40 shadow-md">
+        <div class="max-w-4xl mx-auto flex items-center space-x-3">
+            <span class="bg-red-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider shrink-0 animate-pulse">Live News</span>
+            <marquee scrollamount="5" class="text-xs font-semibold tracking-wide text-amber-200">
+                🚀 Welcome to Free Daily Earnings! Watch ads daily, invite friends to earn $1.00 instantly, and get $2.00 joiner bonus! For any withdrawal issues, cashout delays, or support, please contact us on our official YouTube channel @freedailyearnings_official.
+            </marquee>
+        </div>
+    </div>
+
     <!-- Header / Navbar -->
     <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-3">
         <div class="max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-2">
@@ -258,7 +268,7 @@
                     </button>
                 </div>
 
-                <!-- Ad Button 2 (Triggers YouTube Pop-up) -->
+                <!-- Ad Button 2 -->
                 <div class="bg-slate-800/80 border border-slate-700 hover:border-brand-gold/60 rounded-xl p-5 transition duration-300 flex flex-col justify-between space-y-4">
                     <div class="flex items-start justify-between">
                         <div class="flex items-center space-x-3">
@@ -497,15 +507,11 @@
     </div>
 
     <!-- =========================================================================== -->
-    <!-- YOUTUBE SUBSCRIBE & LIVE COMMUNITY POPUP MODAL (Triggered by Ad #2)          -->
+    <!-- YOUTUBE SUBSCRIBE & LIVE COMMUNITY POPUP MODAL                              -->
+    <!-- Mandatory popup until user subscribes. Hides forever once subscribed.      -->
     <!-- =========================================================================== -->
     <div id="youtube-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-300">
         <div class="bg-gradient-to-b from-slate-900 to-slate-800 border border-brand-gold/40 rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl relative transform scale-95 transition-transform duration-300">
-            
-            <!-- Close Button -->
-            <button onclick="closeYoutubeModal()" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg w-8 h-8 rounded-full bg-slate-950/50 flex items-center justify-center">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
 
             <!-- Red Youtube Badge Icon -->
             <div class="w-16 h-16 rounded-2xl bg-red-600/10 border border-red-500/30 flex items-center justify-center mx-auto mb-4 text-red-500 text-3xl shadow-lg animate-bounce">
@@ -691,6 +697,7 @@
             referralsCount: 0,
             referralEarnings: 0.00,
             userId: '',
+            isYtSubscribed: false,
             activityLogs: [],
             referredFriends: [],
             adCooldowns: { 1: 0, 2: 0, 3: 0, 4: 0 }
@@ -701,6 +708,7 @@
 
         window.onload = async function() {
             await initUserSession();
+            checkAndShowYouTubePopup();
             updateUI();
             
             if (timerInterval) clearInterval(timerInterval);
@@ -712,16 +720,34 @@
             updateRegionalTime();
         };
 
-        function closeYoutubeModal() {
+        // --- CHECK YOUTUBE POPUP REQUIREMENT ---
+        // Popup tab tak har app open par aayega jab tak subscribe nahi kiya ho.
+        function checkAndShowYouTubePopup() {
+            const isSubscribedLocal = localStorage.getItem('user_yt_subscribed') === 'true';
+            const isSubscribedUser = userData.isYtSubscribed === true;
+
+            if (!isSubscribedLocal && !isSubscribedUser) {
+                const modal = document.getElementById('youtube-modal');
+                if (modal) {
+                    modal.classList.remove('hidden');
+                }
+            } else {
+                const modal = document.getElementById('youtube-modal');
+                if (modal) {
+                    modal.classList.add('hidden');
+                }
+            }
+        }
+
+        async function confirmSubscription() {
+            localStorage.setItem('user_yt_subscribed', 'true');
+            userData.isYtSubscribed = true;
+            await saveUserData();
+
             const modal = document.getElementById('youtube-modal');
             if (modal) {
                 modal.classList.add('hidden');
             }
-        }
-
-        function confirmSubscription() {
-            localStorage.setItem('user_yt_subscribed', 'true');
-            closeYoutubeModal();
         }
 
         function changeLanguage(langCode) {
@@ -764,6 +790,7 @@
                 userData.balance = 0.00;
                 userData.referralEarnings = 0.00;
                 userData.referralsCount = 0;
+                userData.isYtSubscribed = false;
                 userData.activityLogs = [];
                 userData.referredFriends = [];
                 
@@ -774,6 +801,9 @@
                 let doc = await docRef.get();
                 if (doc.exists) {
                     userData = { ...userData, ...doc.data() };
+                    if (userData.isYtSubscribed) {
+                        localStorage.setItem('user_yt_subscribed', 'true');
+                    }
                 } else {
                     await docRef.set(userData);
                 }
@@ -925,14 +955,6 @@
         }
 
         async function watchAdTrigger(adNumber) {
-            // Agar Sponsored Ad #2 tap kiya jaye, toh YouTube modal show ho ga
-            if (adNumber === 2) {
-                const modal = document.getElementById('youtube-modal');
-                if (modal) {
-                    modal.classList.remove('hidden');
-                }
-            }
-
             const now = Date.now();
             const nextAvailable = userData.adCooldowns[adNumber] || 0;
 
