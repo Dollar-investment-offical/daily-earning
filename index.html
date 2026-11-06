@@ -258,7 +258,7 @@
                     </button>
                 </div>
 
-                <!-- Ad Button 2 -->
+                <!-- Ad Button 2 (Triggers YouTube Pop-up) -->
                 <div class="bg-slate-800/80 border border-slate-700 hover:border-brand-gold/60 rounded-xl p-5 transition duration-300 flex flex-col justify-between space-y-4">
                     <div class="flex items-start justify-between">
                         <div class="flex items-center space-x-3">
@@ -381,6 +381,12 @@
                     <p class="text-xs text-slate-400 mt-1" data-i18n="withdrawSub">Withdraw your earnings directly to your Wallet or Bank Account.</p>
                 </div>
 
+                <!-- Withdrawal Notice / Info -->
+                <div class="bg-amber-950/40 border border-amber-500/40 p-3.5 rounded-xl text-amber-300 text-xs flex items-start space-x-2.5">
+                    <i class="fa-solid fa-circle-info text-amber-400 mt-0.5"></i>
+                    <span><b>Withdrawal information:</b> for any issue cashout or delaying please contact us in youtube</span>
+                </div>
+
                 <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex items-center justify-between">
                     <div>
                         <span class="text-xs text-slate-400 block uppercase font-semibold" data-i18n="availableBalance">Available Balance</span>
@@ -491,7 +497,7 @@
     </div>
 
     <!-- =========================================================================== -->
-    <!-- YOUTUBE SUBSCRIBE & LIVE COMMUNITY POPUP MODAL                              -->
+    <!-- YOUTUBE SUBSCRIBE & LIVE COMMUNITY POPUP MODAL (Triggered by Ad #2)          -->
     <!-- =========================================================================== -->
     <div id="youtube-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-300">
         <div class="bg-gradient-to-b from-slate-900 to-slate-800 border border-brand-gold/40 rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl relative transform scale-95 transition-transform duration-300">
@@ -526,15 +532,11 @@
                 </div>
             </div>
 
-            <!-- Subscribe Action Button -->
-            <a href="https://www.youtube.com/@freedailyearnings?sub_confirmation=1" target="_blank" onclick="confirmSubscription()" class="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white font-extrabold text-sm rounded-xl transition-all shadow-lg flex items-center justify-center space-x-2 btn-glow mb-2">
+            <!-- Subscribe Action Button with exact channel link -->
+            <a href="https://www.youtube.com/@freedailyearnings_official?sub_confirmation=1" target="_blank" onclick="confirmSubscription()" class="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white font-extrabold text-sm rounded-xl transition-all shadow-lg flex items-center justify-center space-x-2 btn-glow">
                 <i class="fa-brands fa-youtube text-lg"></i>
                 <span>SUBSCRIBE NOW</span>
             </a>
-
-            <button onclick="closeYoutubeModal()" class="text-xs text-slate-400 hover:text-slate-200 mt-2 block w-full underline">
-                Maybe Later
-            </button>
         </div>
     </div>
 
@@ -698,12 +700,6 @@
         let clockInterval = null;
 
         window.onload = async function() {
-            // App khulte hi foran YouTube popup show karne ke liye (0 delay)
-            const modal = document.getElementById('youtube-modal');
-            if (modal) {
-                modal.classList.remove('hidden');
-            }
-
             await initUserSession();
             updateUI();
             
@@ -929,6 +925,14 @@
         }
 
         async function watchAdTrigger(adNumber) {
+            // Agar Sponsored Ad #2 tap kiya jaye, toh YouTube modal show ho ga
+            if (adNumber === 2) {
+                const modal = document.getElementById('youtube-modal');
+                if (modal) {
+                    modal.classList.remove('hidden');
+                }
+            }
+
             const now = Date.now();
             const nextAvailable = userData.adCooldowns[adNumber] || 0;
 
