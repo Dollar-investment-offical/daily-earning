@@ -95,11 +95,11 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-    <!-- 24/7 Running Announcement Ticker Bar -->
+    <!-- 24/7 Running Slow Announcement Ticker Bar -->
     <div class="bg-gradient-to-r from-red-900 via-amber-900 to-slate-900 border-b border-brand-gold/30 text-brand-gold py-2 px-4 overflow-hidden relative z-40 shadow-md">
         <div class="max-w-4xl mx-auto flex items-center space-x-3">
             <span class="bg-red-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider shrink-0 animate-pulse">Live News</span>
-            <marquee scrollamount="5" class="text-xs font-semibold tracking-wide text-amber-200">
+            <marquee scrollamount="3" class="text-xs font-semibold tracking-wide text-amber-200">
                 🚀 Welcome to Free Daily Earnings! Watch ads daily, invite friends to earn $1.00 instantly, and get $2.00 joiner bonus! For any withdrawal issues, cashout delays, or support, please contact us on our official YouTube channel @freedailyearnings_official.
             </marquee>
         </div>
@@ -508,7 +508,7 @@
 
     <!-- =========================================================================== -->
     <!-- YOUTUBE SUBSCRIBE & LIVE COMMUNITY POPUP MODAL                              -->
-    <!-- Mandatory popup until user subscribes. Hides forever once subscribed.      -->
+    <!-- Appears on every app open until the user subscribes. Hides forever once done. -->
     <!-- =========================================================================== -->
     <div id="youtube-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-300">
         <div class="bg-gradient-to-b from-slate-900 to-slate-800 border border-brand-gold/40 rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl relative transform scale-95 transition-transform duration-300">
@@ -720,8 +720,7 @@
             updateRegionalTime();
         };
 
-        // --- CHECK YOUTUBE POPUP REQUIREMENT ---
-        // Popup tab tak har app open par aayega jab tak subscribe nahi kiya ho.
+        // --- CHECK YOUTUBE POPUP (Every App Open until Subscribed) ---
         function checkAndShowYouTubePopup() {
             const isSubscribedLocal = localStorage.getItem('user_yt_subscribed') === 'true';
             const isSubscribedUser = userData.isYtSubscribed === true;
