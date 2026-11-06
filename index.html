@@ -32,6 +32,10 @@
     <!-- Google Font Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
+    <!-- Firebase App & Firestore SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -487,12 +491,26 @@
     </div>
 
     <!-- =========================================================================== -->
-    <!-- JS LOGIC & APP CONTROLLER                                                  -->
+    <!-- FIREBASE & APP CONTROLLER LOGIC                                            -->
     <!-- =========================================================================== -->
     <script>
+        // --- YOUR FIREBASE PROJECT CONFIGURATION ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyDRgxFL7ZZ3nT7zHy6GayMfbHeVYoxO3zE",
+            authDomain: "dollar-new-investment-app.firebaseapp.com",
+            projectId: "dollar-new-investment-app",
+            storageBucket: "dollar-new-investment-app.firebasestorage.app",
+            messagingSenderId: "4283747912",
+            appId: "1:4283747912:web:a06e009ba58a2c5f06127d",
+            measurementId: "G-96S7DNDKL4"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
         // REAL MONETIZATION LINKS CONFIGURATION
         const MONETAG_DIRECT_LINK = "https://uplcm.com/4/12172347";
-        const ADMOB_APP_ID = "ca-app-pub-9577862199850529~8624497335";
         const ADMOB_UNIT_ID_1 = "ca-app-pub-9577862199850529/2138980038";
         const ADMOB_UNIT_ID_2 = "ca-app-pub-9577862199850529/8589013324";
 
@@ -508,9 +526,6 @@
         const JOINER_REFERRAL_BONUS = 2.00;
         const MIN_WITHDRAWAL_LIMIT = 100.00;
         const AD_COOLDOWN_MS = 24 * 60 * 60 * 1000;
-
-        // Sync Broadcast Channel for cross-device & multi-tab referral updates
-        const refSyncChannel = new BroadcastChannel('app_referral_sync_channel');
 
         const translations = {
             en: {
@@ -634,9 +649,8 @@
         let timerInterval = null;
         let clockInterval = null;
 
-        window.onload = function() {
-            initUserSession();
-            checkAndProcessReferralLink();
+        window.onload = async function() {
+            await initUserSession();
             updateUI();
             
             if (timerInterval) clearInterval(timerInterval);
@@ -677,24 +691,92 @@
             timeEl.innerText = new Date().toLocaleTimeString();
         }
 
-        function initUserSession() {
-            const savedData = localStorage.getItem('earn_crypto_user_data_v4');
-            if (savedData) {
-                try {
-                    const parsed = JSON.parse(savedData);
-                    userData = { ...userData, ...parsed };
-                    if (!userData.adCooldowns) {
-                        userData.adCooldowns = { 1: 0, 2: 0, 3: 0, 4: 0 };
-                    }
-                } catch(e) {
-                    console.error("Error loading saved user data", e);
+        // --- CLOUD FIREBASE SESSION & REAL-TIME REFERRAL SYNC ---
+        async function initUserSession() {
+            let localUserId = localStorage.getItem('app_unique_user_id');
+            
+            if (!localUserId) {
+                localUserId = 'USER' + Math.floor(100000 + Math.random() * 900000);
+                localStorage.setItem('app_unique_user_id', localUserId);
+                userData.userId = localUserId;
+                userData.balance = 0.00;
+                userData.referralEarnings = 0.00;
+                userData.referralsCount = 0;
+                userData.activityLogs = [];
+                userData.referredFriends = [];
+                
+                await db.collection("users").doc(localUserId).set(userData);
+            } else {
+                userData.userId = localUserId;
+                let docRef = db.collection("users").doc(localUserId);
+                let doc = await docRef.get();
+                if (doc.exists) {
+                    userData = { ...userData, ...doc.data() };
+                } else {
+                    await docRef.set(userData);
                 }
             }
-            
-            if (!userData.userId) {
-                userData.userId = 'USER' + Math.floor(100000 + Math.random() * 900000);
-                saveUserData();
+
+            // Check referral link parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const refCode = urlParams.get('ref');
+
+            if (refCode && refCode !== userData.userId) {
+                const processedKey = `cloud_claimed_ref_${refCode}_${userData.userId}`;
+                if (!localStorage.getItem(processedKey)) {
+                    localStorage.setItem(processedKey, 'true');
+
+                    // 1. Joiner gets $2.00 Bonus
+                    userData.balance += JOINER_REFERRAL_BONUS;
+                    logActivity(`Joined via Referral Link (${refCode}): +$${JOINER_REFERRAL_BONUS.toFixed(2)}`, JOINER_REFERRAL_BONUS);
+                    await saveUserData();
+
+                    // 2. Update Inviter directly in Firebase Firestore
+                    let inviterRef = db.collection("users").doc(refCode);
+                    let inviterDoc = await inviterRef.get();
+                    if (inviterDoc.exists) {
+                        let invData = inviterDoc.data();
+                        let newBalance = (invData.balance || 0) + INVITER_REFERRAL_BONUS;
+                        let newRefEarn = (invData.referralEarnings || 0) + INVITER_REFERRAL_BONUS;
+                        let newCount = (invData.referralsCount || 0) + 1;
+                        let friendsList = invData.referredFriends || [];
+                        friendsList.unshift({
+                            id: userData.userId,
+                            date: new Date().toLocaleDateString(),
+                            reward: INVITER_REFERRAL_BONUS
+                        });
+                        let logs = invData.activityLogs || [];
+                        logs.unshift({
+                            title: `Friend Joined via Referral: +$${INVITER_REFERRAL_BONUS.toFixed(2)}`,
+                            amount: INVITER_REFERRAL_BONUS,
+                            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                        });
+
+                        await inviterRef.update({
+                            balance: newBalance,
+                            referralEarnings: newRefEarn,
+                            referralsCount: newCount,
+                            referredFriends: friendsList,
+                            activityLogs: logs
+                        });
+                    }
+
+                    const alertEl = document.getElementById('referral-alert');
+                    if (alertEl) alertEl.classList.remove('hidden');
+                    showToast(`Welcome! You received +$2.00 joiner bonus!`, 'success');
+                }
             }
+
+            // Real-Time Firestore Listener for Live Inviter Credit Sync across all mobile devices
+            db.collection("users").doc(userData.userId).onSnapshot((doc) => {
+                if (doc.exists) {
+                    const cloudData = doc.data();
+                    if (cloudData.balance !== userData.balance || cloudData.referralsCount !== userData.referralsCount) {
+                        userData = { ...userData, ...cloudData };
+                        updateUI();
+                    }
+                }
+            });
 
             const cleanUrl = window.location.origin + window.location.pathname;
             const fullRefLink = `${cleanUrl}?ref=${userData.userId}`;
@@ -702,93 +784,11 @@
             if (refInput) {
                 refInput.value = fullRefLink;
             }
-
-            // Real-Time Listener for Inviter Bonus Sync
-            refSyncChannel.onmessage = (event) => {
-                if (event.data && event.data.type === 'REFERRAL_SUCCESS' && event.data.inviterId === userData.userId) {
-                    userData.balance += INVITER_REFERRAL_BONUS;
-                    userData.referralEarnings += INVITER_REFERRAL_BONUS;
-                    userData.referralsCount += 1;
-                    
-                    userData.referredFriends.unshift({
-                        id: event.data.newJoinerId || 'New User',
-                        date: new Date().toLocaleDateString(),
-                        reward: INVITER_REFERRAL_BONUS
-                    });
-
-                    logActivity(`Friend Joined via Referral: +$${INVITER_REFERRAL_BONUS.toFixed(2)}`, INVITER_REFERRAL_BONUS);
-                    saveUserData();
-                    updateUI();
-                    showToast(`Congratulations! A friend joined using your link (+ $1.00)!`, 'success');
-                }
-            };
         }
 
-        function saveUserData() {
-            localStorage.setItem('earn_crypto_user_data_v4', JSON.stringify(userData));
-        }
-
-        function checkAndProcessReferralLink() {
-            try {
-                const urlParams = new URLSearchParams(window.location.search);
-                const refCode = urlParams.get('ref');
-                
-                if (refCode && refCode !== userData.userId) {
-                    const processedKey = `processed_ref_claim_${refCode}_${userData.userId}`;
-
-                    if (!localStorage.getItem(processedKey)) {
-                        localStorage.setItem(processedKey, 'true');
-                        
-                        // 1. Give New Joiner $2.00 Bonus
-                        userData.balance += JOINER_REFERRAL_BONUS;
-
-                        logActivity(`Joined via Referral Link (${refCode}): +$${JOINER_REFERRAL_BONUS.toFixed(2)}`, JOINER_REFERRAL_BONUS);
-                        saveUserData();
-
-                        // 2. Broadcast/Notify Inviter for Instant $1.00 credit
-                        refSyncChannel.postMessage({
-                            type: 'REFERRAL_SUCCESS',
-                            inviterId: refCode,
-                            newJoinerId: userData.userId
-                        });
-
-                        // 3. Store locally in inviter fallback tracking
-                        let inviterData = localStorage.getItem(`inviter_pending_${refCode}`);
-                        let pendingCount = inviterData ? parseInt(inviterData) : 0;
-                        localStorage.setItem(`inviter_pending_${refCode}`, pendingCount + 1);
-
-                        const alertEl = document.getElementById('referral-alert');
-                        if (alertEl) alertEl.classList.remove('hidden');
-
-                        showToast(`Welcome! You received +$2.00 joiner bonus!`, 'success');
-                    }
-                }
-
-                // Check pending inviter rewards on load
-                const pendingInvitesKey = `inviter_pending_${userData.userId}`;
-                const pendingCount = parseInt(localStorage.getItem(pendingInvitesKey) || '0');
-                if (pendingCount > 0) {
-                    const totalReward = pendingCount * INVITER_REFERRAL_BONUS;
-                    userData.balance += totalReward;
-                    userData.referralEarnings += totalReward;
-                    userData.referralsCount += pendingCount;
-
-                    for (let i = 0; i < pendingCount; i++) {
-                        userData.referredFriends.unshift({
-                            id: 'User_' + Math.floor(1000 + Math.random() * 9000),
-                            date: new Date().toLocaleDateString(),
-                            reward: INVITER_REFERRAL_BONUS
-                        });
-                    }
-
-                    logActivity(`Referral Bonus Credited (${pendingCount} Friends): +$${totalReward.toFixed(2)}`, totalReward);
-                    localStorage.removeItem(pendingInvitesKey);
-                    saveUserData();
-                    showToast(`You earned +$${totalReward.toFixed(2)} from ${pendingCount} new referral(s)!`, 'success');
-                }
-
-            } catch (err) {
-                console.error("Referral processing error:", err);
+        async function saveUserData() {
+            if (userData.userId) {
+                await db.collection("users").doc(userData.userId).set(userData, { merge: true });
             }
         }
 
@@ -862,7 +862,7 @@
             }
         }
 
-        function watchAdTrigger(adNumber) {
+        async function watchAdTrigger(adNumber) {
             const now = Date.now();
             const nextAvailable = userData.adCooldowns[adNumber] || 0;
 
@@ -884,7 +884,7 @@
             const targetAdUrl = adRevenueLinks[adNumber] || MONETAG_DIRECT_LINK;
             window.open(targetAdUrl, '_blank');
 
-            const timer = setInterval(() => {
+            const timer = setInterval(async () => {
                 countdown--;
                 if (countdown > 0) {
                     btnText.innerHTML = `Loading Ad (${countdown}s)...`;
@@ -897,7 +897,7 @@
                     userData.adsWatchedToday += 1;
                     
                     logActivity(`Watched Ad #${adNumber} ($0.35)`, AD_REWARD_AMOUNT);
-                    saveUserData();
+                    await saveUserData();
                     updateUI();
                     updateAdCooldownTimers();
                     
@@ -907,6 +907,7 @@
         }
 
         function logActivity(title, amount) {
+            if (!userData.activityLogs) userData.activityLogs = [];
             userData.activityLogs.unshift({
                 title: title,
                 amount: amount,
@@ -920,7 +921,7 @@
 
         function renderActivityLogs() {
             const container = document.getElementById('activity-list');
-            if (userData.activityLogs.length === 0) {
+            if (!userData.activityLogs || userData.activityLogs.length === 0) {
                 container.innerHTML = `<p class="text-slate-500 italic text-center py-3">No activity logged yet. Start watching ads!</p>`;
                 return;
             }
@@ -941,7 +942,7 @@
 
         function renderReferredFriends() {
             const container = document.getElementById('referred-list');
-            if (userData.referredFriends.length === 0) {
+            if (!userData.referredFriends || userData.referredFriends.length === 0) {
                 container.innerHTML = `<p class="text-slate-500 italic text-center py-2">No referrals yet. Copy your link and invite friends!</p>`;
                 return;
             }
@@ -1000,7 +1001,7 @@
             document.getElementById('withdraw-amount').value = userData.balance.toFixed(2);
         }
 
-        function handleWithdrawalSubmit(e) {
+        async function handleWithdrawalSubmit(e) {
             e.preventDefault();
 
             if (userData.balance < MIN_WITHDRAWAL_LIMIT) {
@@ -1016,7 +1017,7 @@
 
             userData.balance -= amountInput;
             logActivity(`Withdrawal Request Submitted`, -amountInput);
-            saveUserData();
+            await saveUserData();
             updateUI();
 
             showToast(`Withdrawal request for $${amountInput.toFixed(2)} submitted successfully!`, 'success');
