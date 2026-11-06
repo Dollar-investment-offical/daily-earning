@@ -491,6 +491,54 @@
     </div>
 
     <!-- =========================================================================== -->
+    <!-- YOUTUBE SUBSCRIBE & LIVE COMMUNITY POPUP MODAL                              -->
+    <!-- =========================================================================== -->
+    <div id="youtube-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-300">
+        <div class="bg-gradient-to-b from-slate-900 to-slate-800 border border-brand-gold/40 rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl relative transform scale-95 transition-transform duration-300">
+            
+            <!-- Close Button -->
+            <button onclick="closeYoutubeModal()" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg w-8 h-8 rounded-full bg-slate-950/50 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- Red Youtube Badge Icon -->
+            <div class="w-16 h-16 rounded-2xl bg-red-600/10 border border-red-500/30 flex items-center justify-center mx-auto mb-4 text-red-500 text-3xl shadow-lg animate-bounce">
+                <i class="fa-brands fa-youtube"></i>
+            </div>
+
+            <!-- Heading -->
+            <h3 class="text-xl font-extrabold text-white mb-1">Official YouTube Channel!</h3>
+            <p class="text-xs text-brand-gold font-semibold mb-4">Join Free Daily Earnings Community</p>
+
+            <!-- Bullet Highlights -->
+            <div class="bg-slate-950/70 p-3.5 rounded-xl border border-slate-800 text-left space-y-2 mb-5 text-xs text-slate-300">
+                <div class="flex items-center space-x-2.5">
+                    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                    <span><b>Live News & Updates:</b> App notifications & guides.</span>
+                </div>
+                <div class="flex items-center space-x-2.5">
+                    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                    <span><b>Withdrawal Proofs:</b> Real cashout video step-by-step.</span>
+                </div>
+                <div class="flex items-center space-x-2.5">
+                    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                    <span><b>Direct Chat & Support:</b> Live Q&A and help.</span>
+                </div>
+            </div>
+
+            <!-- Subscribe Action Button -->
+            <a href="https://www.youtube.com/@freedailyearnings?sub_confirmation=1" target="_blank" onclick="confirmSubscription()" class="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white font-extrabold text-sm rounded-xl transition-all shadow-lg flex items-center justify-center space-x-2 btn-glow mb-2">
+                <i class="fa-brands fa-youtube text-lg"></i>
+                <span>SUBSCRIBE NOW</span>
+            </a>
+
+            <button onclick="closeYoutubeModal()" class="text-xs text-slate-400 hover:text-slate-200 mt-2 block w-full underline">
+                Maybe Later
+            </button>
+        </div>
+    </div>
+
+    <!-- =========================================================================== -->
     <!-- FIREBASE & APP CONTROLLER LOGIC                                            -->
     <!-- =========================================================================== -->
     <script>
@@ -660,7 +708,30 @@
             if (clockInterval) clearInterval(clockInterval);
             clockInterval = setInterval(updateRegionalTime, 1000);
             updateRegionalTime();
+
+            // Auto show YouTube popup after 3 seconds
+            setTimeout(() => {
+                const hasSubscribed = localStorage.getItem('user_yt_subscribed');
+                if (!hasSubscribed) {
+                    const modal = document.getElementById('youtube-modal');
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                    }
+                }
+            }, 3000);
         };
+
+        function closeYoutubeModal() {
+            const modal = document.getElementById('youtube-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function confirmSubscription() {
+            localStorage.setItem('user_yt_subscribed', 'true');
+            closeYoutubeModal();
+        }
 
         function changeLanguage(langCode) {
             if (!translations[langCode]) langCode = 'en';
