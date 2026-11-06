@@ -391,10 +391,15 @@
                     <p class="text-xs text-slate-400 mt-1" data-i18n="withdrawSub">Withdraw your earnings directly to your Wallet or Bank Account.</p>
                 </div>
 
-                <!-- Withdrawal Notice / Info -->
+                <!-- Updated Withdrawal Notice with Direct Clickable YouTube Link -->
                 <div class="bg-amber-950/40 border border-amber-500/40 p-3.5 rounded-xl text-amber-300 text-xs flex items-start space-x-2.5">
-                    <i class="fa-solid fa-circle-info text-amber-400 mt-0.5"></i>
-                    <span><b>Withdrawal information:</b> for any issue cashout or delaying please contact us in youtube</span>
+                    <i class="fa-solid fa-circle-info text-amber-400 mt-0.5 shrink-0"></i>
+                    <span>
+                        for withdrawal related news or for new updates subscribe our officel youtube chanel: 
+                        <a href="https://www.youtube.com/@freedailyearnings_official?sub_confirmation=1" target="_blank" class="text-brand-gold font-bold underline hover:text-white transition break-all ml-1">
+                            https://www.youtube.com/@freedailyearnings_official
+                        </a>
+                    </span>
                 </div>
 
                 <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex items-center justify-between">
@@ -508,7 +513,7 @@
 
     <!-- =========================================================================== -->
     <!-- YOUTUBE SUBSCRIBE & LIVE COMMUNITY POPUP MODAL                              -->
-    <!-- Appears on every app open until the user subscribes. Hides forever once done. -->
+    <!-- Appears on every app open for ALL OLD & NEW users until subscribed.        -->
     <!-- =========================================================================== -->
     <div id="youtube-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-300">
         <div class="bg-gradient-to-b from-slate-900 to-slate-800 border border-brand-gold/40 rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl relative transform scale-95 transition-transform duration-300">
@@ -720,19 +725,17 @@
             updateRegionalTime();
         };
 
-        // --- CHECK YOUTUBE POPUP (Every App Open until Subscribed) ---
+        // --- CHECK & SHOW YOUTUBE POPUP ---
+        // Pop up shows every single app open until user clicks SUBSCRIBE NOW
         function checkAndShowYouTubePopup() {
             const isSubscribedLocal = localStorage.getItem('user_yt_subscribed') === 'true';
             const isSubscribedUser = userData.isYtSubscribed === true;
 
-            if (!isSubscribedLocal && !isSubscribedUser) {
-                const modal = document.getElementById('youtube-modal');
-                if (modal) {
+            const modal = document.getElementById('youtube-modal');
+            if (modal) {
+                if (!isSubscribedLocal && !isSubscribedUser) {
                     modal.classList.remove('hidden');
-                }
-            } else {
-                const modal = document.getElementById('youtube-modal');
-                if (modal) {
+                } else {
                     modal.classList.add('hidden');
                 }
             }
@@ -800,9 +803,6 @@
                 let doc = await docRef.get();
                 if (doc.exists) {
                     userData = { ...userData, ...doc.data() };
-                    if (userData.isYtSubscribed) {
-                        localStorage.setItem('user_yt_subscribed', 'true');
-                    }
                 } else {
                     await docRef.set(userData);
                 }
@@ -858,7 +858,7 @@
                 }
             }
 
-            // Real-Time Firestore Listener for Live Inviter Credit Sync across all mobile devices
+            // Real-Time Firestore Listener for Live Sync
             db.collection("users").doc(userData.userId).onSnapshot((doc) => {
                 if (doc.exists) {
                     const cloudData = doc.data();
