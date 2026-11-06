@@ -514,7 +514,7 @@
     <!-- =========================================================================== -->
     <!-- YOUTUBE SUBSCRIBE & LIVE COMMUNITY POPUP MODAL                              -->
     <!-- =========================================================================== -->
-    <div id="youtube-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md hidden transition-opacity duration-300">
+    <div id="youtube-modal" style="display: flex !important; z-index: 999999;" class="fixed inset-0 items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md transition-opacity duration-300">
         <div class="bg-gradient-to-b from-slate-900 to-slate-800 border border-brand-gold/40 rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl relative transform scale-100 transition-transform duration-300">
 
             <!-- Red Youtube Badge Icon -->
@@ -554,6 +554,9 @@
     <!-- FIREBASE & APP CONTROLLER LOGIC                                            -->
     <!-- =========================================================================== -->
     <script>
+        // --- FORCE CLEAR YOUTUBE SUBSCRIPTION CACHE FOR TESTING & IMMEDIATE POPUP ---
+        localStorage.removeItem('user_yt_subscribed');
+
         // --- YOUR FIREBASE PROJECT CONFIGURATION ---
         const firebaseConfig = {
             apiKey: "AIzaSyDRgxFL7ZZ3nT7zHy6GayMfbHeVYoxO3zE",
@@ -711,8 +714,8 @@
         let clockInterval = null;
 
         window.onload = async function() {
+            checkAndShowYouTubePopup(); // Immediate popup trigger on window load
             await initUserSession();
-            checkAndShowYouTubePopup();
             updateUI();
             
             if (timerInterval) clearInterval(timerInterval);
@@ -724,7 +727,7 @@
             updateRegionalTime();
         };
 
-        // --- GUARANTEED POPUP CHECKER ---
+        // --- GUARANTEED POPUP DISPLAY FUNCTION ---
         function checkAndShowYouTubePopup() {
             const isSubscribedLocal = localStorage.getItem('user_yt_subscribed') === 'true';
             const isSubscribedUser = userData.isYtSubscribed === true;
@@ -732,10 +735,8 @@
             const modal = document.getElementById('youtube-modal');
             if (modal) {
                 if (!isSubscribedLocal && !isSubscribedUser) {
-                    modal.classList.remove('hidden');
-                    modal.style.display = 'flex'; // Force display flex to override any class hiding issue
+                    modal.style.display = 'flex';
                 } else {
-                    modal.classList.add('hidden');
                     modal.style.display = 'none';
                 }
             }
@@ -748,7 +749,6 @@
 
             const modal = document.getElementById('youtube-modal');
             if (modal) {
-                modal.classList.add('hidden');
                 modal.style.display = 'none';
             }
         }
@@ -812,7 +812,6 @@
                 }
             }
 
-            // Check and trigger popup immediately after session is loaded
             checkAndShowYouTubePopup();
 
             // Check referral link parameter
