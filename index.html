@@ -100,7 +100,7 @@
         <div class="max-w-4xl mx-auto flex items-center space-x-3">
             <span class="bg-red-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider shrink-0 animate-pulse">Live News</span>
             <marquee scrollamount="3" class="text-xs font-semibold tracking-wide text-amber-200">
-                🚀 Welcome to Free Daily Earnings! Watch ads daily, invite friends to earn $1.00 instantly, and get $2.00 joiner bonus! For any withdrawal issues, cashout delays, or support, please contact us on our official YouTube channel @freedailyearnings_official.
+                🚀 Welcome to Free Daily Earnings! Watch ads daily, invite friends to earn $1.00 instantly, get $2.00 joiner bonus & daily $0.10 login bonus! Contact us on YouTube @freedailyearnings_official.
             </marquee>
         </div>
     </div>
@@ -395,7 +395,7 @@
                 <div class="bg-amber-950/40 border border-amber-500/40 p-3.5 rounded-xl text-amber-300 text-xs flex items-start space-x-2.5">
                     <i class="fa-solid fa-circle-info text-amber-400 mt-0.5 shrink-0"></i>
                     <span>
-                        for withdrawal related news or for new updates subscribe our officel youtube chanel: 
+                        for withdrawal related news or for new updates subscribe our official youtube channel: 
                         <a href="https://www.youtube.com/@freedailyearnings_official?sub_confirmation=1" target="_blank" class="text-brand-gold font-bold underline hover:text-white transition break-all ml-1">
                             https://www.youtube.com/@freedailyearnings_official
                         </a>
@@ -470,10 +470,17 @@
                     <h3 class="text-xl font-bold text-white flex items-center gap-2">
                         <i class="fa-solid fa-circle-info text-brand-gold"></i> <span data-i18n="guideTitle">User Guide & Rules</span>
                     </h3>
-                    <p class="text-xs text-slate-400 mt-1" data-i18n="guideSub">Watch Ad and Earn Daily with automatic 24-hour reward resets.</p>
+                    <p class="text-xs text-slate-400 mt-1" data-i18n="guideSub">Watch Ad and Earn Daily with automatic 24-hour reward resets and daily login bonus.</p>
                 </div>
 
                 <div class="space-y-4 text-xs text-slate-300">
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                        <h4 class="font-bold text-white text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-calendar-day text-brand-gold"></i> <span data-i18n="dailyLoginRuleTitle">Daily Login Bonus ($0.10)</span>
+                        </h4>
+                        <p data-i18n="dailyLoginRuleDesc">Open the app once every 24 hours to automatically collect your $0.10 daily login reward!</p>
+                    </div>
+
                     <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
                         <h4 class="font-bold text-white text-sm flex items-center gap-2">
                             <i class="fa-solid fa-clock-rotate-left text-brand-gold"></i> <span data-i18n="cooldownRuleTitle">24-Hour Ad Cooldown Rule</span>
@@ -512,8 +519,7 @@
     </div>
 
     <!-- =========================================================================== -->
-    <!-- YOUTUBE SUBSCRIBE & LIVE COMMUNITY POPUP MODAL                              -->
-    <!-- Mandatory until subscribed; permanently hidden after subscription.        -->
+    <!-- YOUTUBE SUBSCRIBE & LIVE COMMUNITY POPUP MODAL (2-Min Delay)                -->
     <!-- =========================================================================== -->
     <div id="youtube-modal" style="display: none; z-index: 999999;" class="fixed inset-0 items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md transition-opacity duration-300">
         <div class="bg-gradient-to-b from-slate-900 to-slate-800 border border-brand-gold/40 rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl relative transform scale-100 transition-transform duration-300">
@@ -585,6 +591,7 @@
         const AD_REWARD_AMOUNT = 0.35;
         const INVITER_REFERRAL_BONUS = 1.00;
         const JOINER_REFERRAL_BONUS = 2.00;
+        const DAILY_LOGIN_BONUS = 0.10;
         const MIN_WITHDRAWAL_LIMIT = 100.00;
         const AD_COOLDOWN_MS = 24 * 60 * 60 * 1000;
 
@@ -634,6 +641,8 @@
                 minRequiredBtn: "Minimum $100.00 Required",
                 guideTitle: "User Guide & Rules",
                 guideSub: "Watch Ad and Earn Daily with automatic 24-hour reward resets.",
+                dailyLoginRuleTitle: "Daily Login Bonus ($0.10)",
+                dailyLoginRuleDesc: "Open the app once every 24 hours to automatically collect your $0.10 daily login reward!",
                 cooldownRuleTitle: "24-Hour Ad Cooldown Rule",
                 cooldownRuleDesc: "Watch Ad and Earn Daily! Each ad slot can be viewed once every 24 hours. After viewing, a countdown timer locks the slot for 24 hours.",
                 thresholdRuleTitle: "Payout Threshold ($100)",
@@ -686,6 +695,8 @@
                 minRequiredBtn: "کم از کم $100.00 ضروری ہے",
                 guideTitle: "رہنمائی اور قواعد",
                 guideSub: "اشتہار دیکھیں اور روزانہ 24 گھنٹے کے ری سیٹ کے ساتھ کمائیں۔",
+                dailyLoginRuleTitle: "روزانہ لاگ ان بونس ($0.10)",
+                dailyLoginRuleDesc: "ہر 24 گھنٹے میں ایک بار ایپ کھولیں اور $0.10 روزانہ کا انعام حاصل کریں!",
                 cooldownRuleTitle: "24 گھنٹے کے انتظار کا قانون",
                 cooldownRuleDesc: "ہر اشتہار 24 گھنٹے میں صرف ایک بار دیکھا جا سکتا ہے۔",
                 thresholdRuleTitle: "کم از کم رقم کا قانون ($100)",
@@ -703,6 +714,7 @@
             referralEarnings: 0.00,
             userId: '',
             isYtSubscribed: false,
+            lastLoginBonusDate: '',
             activityLogs: [],
             referredFriends: [],
             adCooldowns: { 1: 0, 2: 0, 3: 0, 4: 0 }
@@ -719,7 +731,8 @@
             }
 
             await initUserSession();
-            checkAndShowYouTubePopup();
+            checkAndScheduleYouTubePopup();
+            checkDailyLoginBonus();
             updateUI();
             
             if (timerInterval) clearInterval(timerInterval);
@@ -731,20 +744,23 @@
             updateRegionalTime();
         };
 
-        // --- CHECK & SHOW YOUTUBE POPUP ---
-        // Shows on every app load UNTIL user clicks "SUBSCRIBE NOW".
-        // Permanently hides after user subscribes.
-        function checkAndShowYouTubePopup() {
+        // --- CHECK & SHOW YOUTUBE POPUP AFTER 2 MINUTES (120 SECONDS) ---
+        // Shows only if user hasn't subscribed yet (both new or old users).
+        function checkAndScheduleYouTubePopup() {
             const isSubscribedLocal = localStorage.getItem('user_yt_subscribed') === 'true';
             const isSubscribedUser = userData.isYtSubscribed === true;
 
-            const modal = document.getElementById('youtube-modal');
-            if (modal) {
-                if (!isSubscribedLocal && !isSubscribedUser) {
-                    modal.style.display = 'flex';
-                } else {
-                    modal.style.display = 'none';
-                }
+            if (!isSubscribedLocal && !isSubscribedUser) {
+                // 2 Minutes delay (120,000 milliseconds)
+                setTimeout(() => {
+                    const stillSubscribedCheck = localStorage.getItem('user_yt_subscribed') === 'true' || userData.isYtSubscribed === true;
+                    if (!stillSubscribedCheck) {
+                        const modal = document.getElementById('youtube-modal');
+                        if (modal) {
+                            modal.style.display = 'flex';
+                        }
+                    }
+                }, 120000); 
             }
         }
 
@@ -756,6 +772,19 @@
             const modal = document.getElementById('youtube-modal');
             if (modal) {
                 modal.style.display = 'none';
+            }
+            showToast('Thank you for subscribing to our YouTube channel!', 'success');
+        }
+
+        // --- DAILY LOGIN BONUS CHECK ($0.10) ---
+        async function checkDailyLoginBonus() {
+            const todayStr = new Date().toDateString();
+            if (userData.lastLoginBonusDate !== todayStr) {
+                userData.lastLoginBonusDate = todayStr;
+                userData.balance += DAILY_LOGIN_BONUS;
+                logActivity(`Daily Login Bonus: +$${DAILY_LOGIN_BONUS.toFixed(2)}`, DAILY_LOGIN_BONUS);
+                await saveUserData();
+                showToast(`Daily Login Bonus Claimed! +$${DAILY_LOGIN_BONUS.toFixed(2)}`, 'success');
             }
         }
 
@@ -800,6 +829,7 @@
                 userData.referralEarnings = 0.00;
                 userData.referralsCount = 0;
                 userData.isYtSubscribed = false;
+                userData.lastLoginBonusDate = '';
                 userData.activityLogs = [];
                 userData.referredFriends = [];
                 
@@ -820,8 +850,6 @@
                 }
             }
 
-            checkAndShowYouTubePopup();
-
             // Check referral link parameter
             const urlParams = new URLSearchParams(window.location.search);
             const refCode = urlParams.get('ref');
@@ -836,7 +864,7 @@
                     logActivity(`Joined via Referral Link (${refCode}): +$${JOINER_REFERRAL_BONUS.toFixed(2)}`, JOINER_REFERRAL_BONUS);
                     await saveUserData();
 
-                    // 2. Update Inviter directly in Firebase Firestore
+                    // 2. Update Inviter directly in Firebase Firestore so their referral team list & count increases dynamically
                     let inviterRef = db.collection("users").doc(refCode);
                     let inviterDoc = await inviterRef.get();
                     if (inviterDoc.exists) {
@@ -852,7 +880,7 @@
                         });
                         let logs = invData.activityLogs || [];
                         logs.unshift({
-                            title: `Friend Joined via Referral: +$${INVITER_REFERRAL_BONUS.toFixed(2)}`,
+                            title: `Friend Joined via Referral (${userData.userId}): +$${INVITER_REFERRAL_BONUS.toFixed(2)}`,
                             amount: INVITER_REFERRAL_BONUS,
                             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                         });
@@ -876,7 +904,7 @@
             db.collection("users").doc(userData.userId).onSnapshot((doc) => {
                 if (doc.exists) {
                     const cloudData = doc.data();
-                    if (cloudData.balance !== userData.balance || cloudData.referralsCount !== userData.referralsCount) {
+                    if (cloudData.balance !== userData.balance || cloudData.referralsCount !== userData.referralsCount || (cloudData.referredFriends && cloudData.referredFriends.length !== userData.referredFriends.length)) {
                         userData = { ...userData, ...cloudData };
                         localStorage.setItem('cached_user_balance', userData.balance.toString());
                         updateUI();
