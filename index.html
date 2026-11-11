@@ -519,7 +519,7 @@
     </div>
 
     <!-- =========================================================================== -->
-    <!-- YOUTUBE SUBSCRIBE & LIVE COMMUNITY POPUP MODAL (5-Sec Delay, Non-Dismissable) -->
+    <!-- YOUTUBE SUBSCRIBE POPUP MODAL (Triggers Exactly 23 Hours After First Open)  -->
     <!-- =========================================================================== -->
     <div id="youtube-modal" style="display: none; z-index: 999999;" class="fixed inset-0 items-center justify-center p-4 bg-slate-950/95 backdrop-blur-md transition-opacity duration-300">
         <div class="bg-gradient-to-b from-slate-900 to-slate-800 border border-brand-gold/40 rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl relative transform scale-100 transition-transform duration-300">
@@ -554,7 +554,7 @@
                 <i class="fa-brands fa-youtube text-lg"></i>
                 <span>SUBSCRIBE NOW</span>
             </a>
-            <p class="text-[10px] text-slate-400 mt-3 italic">Note: Popup will remain until you subscribe.</p>
+            <p class="text-[10px] text-slate-400 mt-3 italic">Note: Popup will stay until you subscribe to our channel.</p>
         </div>
     </div>
 
@@ -595,6 +595,7 @@
         const DAILY_LOGIN_BONUS = 0.10;
         const MIN_WITHDRAWAL_LIMIT = 100.00;
         const AD_COOLDOWN_MS = 24 * 60 * 60 * 1000;
+        const YT_POPUP_DELAY_MS = 23 * 60 * 60 * 1000; // 23 Hours in milliseconds
 
         const translations = {
             en: {
@@ -715,6 +716,7 @@
             referralEarnings: 0.00,
             userId: '',
             isYtSubscribed: false,
+            firstOpenTime: 0,
             lastLoginBonusDate: '',
             activityLogs: [],
             referredFriends: [],
@@ -745,22 +747,49 @@
             updateRegionalTime();
         };
 
-        // --- CHECK & SHOW YOUTUBE POPUP AFTER 5 SECONDS FOR UNSUBSCRIBED USERS ---
+        // --- CHECK & SHOW YOUTUBE POPUP 23 HOURS AFTER FIRST LINK OPEN ---
         function checkAndScheduleYouTubePopup() {
             const isSubscribedLocal = localStorage.getItem('user_yt_subscribed') === 'true';
             const isSubscribedUser = userData.isYtSubscribed === true;
 
-            if (!isSubscribedLocal && !isSubscribedUser) {
-                // 5 Seconds delay after app opens
+            // If already subscribed, never show again
+            if (isSubscribedLocal || isSubscribedUser) {
+                return;
+            }
+
+            // Ensure first open time exists
+            let firstOpen = localStorage.getItem('app_first_open_time');
+            if (!firstOpen) {
+                firstOpen = Date.now().toString();
+                localStorage.setItem('app_first_open_time', firstOpen);
+                if (userData.userId && !userData.firstOpenTime) {
+                    userData.firstOpenTime = parseInt(firstOpen);
+                    saveUserData();
+                }
+            }
+
+            const startTime = parseInt(firstOpen);
+            const now = Date.now();
+            const elapsed = now - startTime;
+
+            if (elapsed >= YT_POPUP_DELAY_MS) {
+                // 23 hours passed & unsubscribed -> Show popup immediately and keep it on screen
+                const modal = document.getElementById('youtube-modal');
+                if (modal) {
+                    modal.style.display = 'flex';
+                }
+            } else {
+                // Schedule timer for remaining time until 23 hours are completed
+                const remainingTime = YT_POPUP_DELAY_MS - elapsed;
                 setTimeout(() => {
-                    const stillSubscribedCheck = localStorage.getItem('user_yt_subscribed') === 'true' || userData.isYtSubscribed === true;
-                    if (!stillSubscribedCheck) {
+                    const stillSubscribed = localStorage.getItem('user_yt_subscribed') === 'true' || userData.isYtSubscribed === true;
+                    if (!stillSubscribed) {
                         const modal = document.getElementById('youtube-modal');
                         if (modal) {
                             modal.style.display = 'flex';
                         }
                     }
-                }, 5000); 
+                }, remainingTime);
             }
         }
 
@@ -820,6 +849,12 @@
         // --- CLOUD FIREBASE SESSION & REAL-TIME REFERRAL SYNC ---
         async function initUserSession() {
             let localUserId = localStorage.getItem('app_unique_user_id');
+            let firstOpen = localStorage.getItem('app_first_open_time');
+
+            if (!firstOpen) {
+                firstOpen = Date.now().toString();
+                localStorage.setItem('app_first_open_time', firstOpen);
+            }
             
             if (!localUserId) {
                 localUserId = 'USER' + Math.floor(100000 + Math.random() * 900000);
@@ -829,6 +864,7 @@
                 userData.referralEarnings = 0.00;
                 userData.referralsCount = 0;
                 userData.isYtSubscribed = false;
+                userData.firstOpenTime = parseInt(firstOpen);
                 userData.lastLoginBonusDate = '';
                 userData.activityLogs = [];
                 userData.referredFriends = [];
@@ -845,7 +881,11 @@
                     if (userData.isYtSubscribed) {
                         localStorage.setItem('user_yt_subscribed', 'true');
                     }
+                    if (userData.firstOpenTime) {
+                        localStorage.setItem('app_first_open_time', userData.firstOpenTime.toString());
+                    }
                 } else {
+                    userData.firstOpenTime = parseInt(firstOpen);
                     await docRef.set(userData);
                 }
             }
