@@ -305,7 +305,7 @@
                     <h3 class="text-xl font-bold text-white flex items-center gap-2">
                         <i class="fa-solid fa-circle-play text-brand-gold"></i> <span data-i18n="sponsoredOffers">Sponsored Ad Offers</span>
                     </h3>
-                    <p class="text-xs text-slate-400" data-i18n="watchAdSub">Watch Ad and Earn Daily ($0.35 per view)!</p>
+                    <p class="text-xs text-slate-400" data-i18n="watchAdSub">Watch Ad and Earn Daily ($0.35 per view)![cite: 1]</p>
                 </div>
                 <span class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs px-2.5 py-1 rounded-md font-semibold animate-pulse" data-i18n="highPaying">
                     High Paying
@@ -396,7 +396,7 @@
                 </div>
             </div>
 
-            <!-- BOTTOM DASHBOARD AD SLOT: 300x250 Medium Rectangle (Works great on both Mobile & Desktop) -->
+            <!-- BOTTOM DASHBOARD AD SLOT: 300x250 Medium Rectangle (Adsterra Unit #6) -->
             <div class="pt-4 flex flex-col items-center justify-center">
                 <span class="text-[10px] text-slate-500 uppercase tracking-wider mb-1">Advertisement</span>
                 <script>
@@ -587,7 +587,7 @@
             </div>
         </section>
 
-        <!-- FOOTER BANNER AD SLOT: 468x60 Banner (Tablet/Desktop) -->
+        <!-- FOOTER BANNER AD SLOT: 468x60 Banner (Adsterra Unit #1) -->
         <div class="hidden sm:flex justify-center items-center pt-6 overflow-hidden">
             <script>
               atOptions = {
@@ -673,16 +673,14 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // REAL MONETIZATION LINKS CONFIGURATION
+        // REPLACED GOOGLE/ADMOB WITH MONETAG DIRECT LINKS FOR AD TRIGGERS
         const MONETAG_DIRECT_LINK = "https://uplcm.com/4/12172347";
-        const ADMOB_UNIT_ID_1 = "ca-app-pub-9577862199850529/2138980038";
-        const ADMOB_UNIT_ID_2 = "ca-app-pub-9577862199850529/8589013324";
 
         const adRevenueLinks = {
             1: MONETAG_DIRECT_LINK,
-            2: `https://admob.google.com/home/?unit=${ADMOB_UNIT_ID_1}`,
+            2: MONETAG_DIRECT_LINK,
             3: MONETAG_DIRECT_LINK,
-            4: `https://admob.google.com/home/?unit=${ADMOB_UNIT_ID_2}`
+            4: MONETAG_DIRECT_LINK
         };
 
         const AD_REWARD_AMOUNT = 0.35;
