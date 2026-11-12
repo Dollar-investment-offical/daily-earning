@@ -87,7 +87,6 @@
             background-color: rgba(240, 185, 11, 0.05);
         }
         
-        /* RTL support for Arabic and Urdu */
         [dir="rtl"] {
             text-align: right;
         }
@@ -104,7 +103,7 @@
 <body class="min-h-screen flex flex-col justify-between relative">
 
     <!-- =========================================================================== -->
-    <!-- 6-SECOND AUTO-DISMISS PROMO POPUP (Shows Every Time User Opens App)          -->
+    <!-- 6-SECOND AUTO-DISMISS PROMO POPUP                                           -->
     <!-- =========================================================================== -->
     <div id="welcome-promo-modal" style="display: flex; z-index: 9999999;" class="fixed inset-0 items-center justify-center p-3 bg-slate-950/90 backdrop-blur-md transition-opacity duration-300">
         <div class="animate-pop-in relative w-full max-w-md rounded-2xl overflow-hidden border-2 border-yellow-400 shadow-[0_0_40px_rgba(250,204,21,0.45)] bg-gradient-to-b from-blue-900 via-indigo-950 to-slate-950 text-white p-4">
@@ -121,7 +120,7 @@
                 </div>
             </div>
 
-            <!-- Header Banner Matching Image -->
+            <!-- Header Banner -->
             <div class="relative flex items-center justify-between gap-2 bg-gradient-to-r from-blue-800/80 to-indigo-900/80 border border-blue-400/30 rounded-xl p-3 mb-3">
                 <div class="flex items-center space-x-2.5">
                     <div class="w-11 h-11 rounded-xl bg-red-600 flex items-center justify-center text-white text-2xl shadow-lg shrink-0 border border-red-400">
@@ -133,7 +132,6 @@
                         </h2>
                     </div>
                 </div>
-                <!-- Red Corner Badge: Get $5 Dollar Extra -->
                 <div class="bg-gradient-to-br from-red-500 to-red-700 border-2 border-yellow-300 rounded-xl px-2.5 py-1.5 text-center shadow-lg transform rotate-3 shrink-0">
                     <span class="block text-[9px] font-extrabold uppercase text-yellow-200 leading-none">Get</span>
                     <span class="block text-sm font-black text-white leading-tight">$5 Dollar</span>
@@ -144,7 +142,7 @@
             <!-- Middle Hero Highlight -->
             <div class="bg-gradient-to-r from-amber-500/20 via-yellow-500/25 to-amber-500/20 border border-yellow-400/50 rounded-xl p-3 text-center mb-3 relative overflow-hidden">
                 <p class="text-xs font-extrabold text-white tracking-wide">
-                    Just Subscribe or Comment &amp; Earn
+                    Just Subscribe &amp; Get $5 Extra (Credited after 96h verification)
                 </p>
                 <div class="my-1 inline-block bg-yellow-400 text-red-600 font-black text-2xl sm:text-3xl px-5 py-0.5 rounded-xl shadow-md border-2 border-white">
                     $5 EXTRA!
@@ -156,23 +154,23 @@
                 <div class="bg-slate-900/90 border border-blue-500/30 rounded-xl p-2 space-y-1">
                     <div class="font-extrabold text-yellow-300 text-[11px] border-b border-slate-700 pb-0.5">How to Join?</div>
                     <p class="flex items-start gap-1 text-slate-200"><i class="fa-solid fa-circle-check text-emerald-400 mt-0.5"></i><span>Subscribe Channel</span></p>
-                    <p class="flex items-start gap-1 text-slate-200"><i class="fa-solid fa-circle-check text-emerald-400 mt-0.5"></i><span>Comment <b>"Subscription Done"</b></span></p>
-                    <p class="flex items-start gap-1 text-slate-200"><i class="fa-solid fa-circle-check text-emerald-400 mt-0.5"></i><span>Get $5 Extra</span></p>
+                    <p class="flex items-start gap-1 text-slate-200"><i class="fa-solid fa-circle-check text-emerald-400 mt-0.5"></i><span>Comment <b>"Done"</b></span></p>
+                    <p class="flex items-start gap-1 text-slate-200"><i class="fa-solid fa-circle-check text-emerald-400 mt-0.5"></i><span>96h Auto-Credit</span></p>
                 </div>
 
                 <div class="bg-gradient-to-b from-blue-900/90 to-slate-900/90 border border-yellow-400/50 rounded-xl p-2 flex flex-col items-center justify-center text-center">
                     <span class="text-[10px] font-bold text-yellow-200 uppercase">Your Bonus</span>
                     <span class="text-2xl sm:text-3xl font-black text-red-500 drop-shadow-[0_2px_2px_rgba(255,255,255,0.8)] my-1">+$5</span>
-                    <span class="text-[9px] text-emerald-300 font-semibold">Instant Credit</span>
+                    <span class="text-[9px] text-emerald-300 font-semibold">96h Pending</span>
                 </div>
 
                 <div class="bg-slate-900/90 border border-blue-500/30 rounded-xl p-2 flex flex-col justify-between">
                     <div class="font-extrabold text-yellow-300 text-[10px] border-b border-slate-700 pb-0.5">YouTube Link:</div>
-                    <a href="https://www.youtube.com/@DXB-ProBot?sub_confirmation=1" target="_blank" class="my-1 bg-white text-slate-900 font-bold text-[9px] p-1 rounded flex items-center gap-1 break-all hover:bg-yellow-200 transition">
+                    <a href="https://youtube.com/@freedailyearnings_official?si=UlAytq_0o2gOtwaa" target="_blank" class="my-1 bg-white text-slate-900 font-bold text-[9px] p-1 rounded flex items-center gap-1 break-all hover:bg-yellow-200 transition">
                         <i class="fa-brands fa-youtube text-red-600 text-xs shrink-0"></i>
-                        <span>youtube.com/@DXB-ProBot</span>
+                        <span>youtube.com/@freedailyearnings_official</span>
                     </a>
-                    <span class="text-[9px] text-amber-200 leading-tight">Subscribe &amp; Comment to Claim!</span>
+                    <span class="text-[9px] text-amber-200 leading-tight">Click to Subscribe!</span>
                 </div>
             </div>
 
@@ -182,21 +180,21 @@
                 <div class="grid grid-cols-3 gap-1 text-center text-[10px] font-bold">
                     <div class="bg-slate-900 rounded-lg p-1.5 border border-slate-800">
                         <span class="inline-block w-4 h-4 rounded-full bg-yellow-400 text-slate-950 font-black text-[9px] leading-4 mb-0.5">1</span>
-                        <span class="block text-white">Subscribe Channel</span>
+                        <span class="block text-white">Subscribe</span>
                     </div>
                     <div class="bg-slate-900 rounded-lg p-1.5 border border-slate-800">
                         <span class="inline-block w-4 h-4 rounded-full bg-yellow-400 text-slate-950 font-black text-[9px] leading-4 mb-0.5">2</span>
-                        <span class="block text-white">Comment "Done"</span>
+                        <span class="block text-white">Click Button</span>
                     </div>
                     <div class="bg-slate-900 rounded-lg p-1.5 border border-slate-800">
                         <span class="inline-block w-4 h-4 rounded-full bg-yellow-400 text-slate-950 font-black text-[9px] leading-4 mb-0.5">3</span>
-                        <span class="block text-emerald-400">Get $5 Extra</span>
+                        <span class="block text-emerald-400">$5 in 96h</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Yellow Bottom CTA Button -->
-            <a href="https://www.youtube.com/@DXB-ProBot?sub_confirmation=1" target="_blank" class="w-full py-2.5 bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 hover:brightness-110 text-slate-950 font-black text-xs sm:text-sm rounded-xl shadow-lg flex items-center justify-center space-x-2 border border-white transition">
+            <!-- Yellow Bottom CTA Button triggering YouTube Subscription Claim -->
+            <a href="https://youtube.com/@freedailyearnings_official?si=UlAytq_0o2gOtwaa" target="_blank" onclick="claimYouTubeSubscription()" class="w-full py-2.5 bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 hover:brightness-110 text-slate-950 font-black text-xs sm:text-sm rounded-xl shadow-lg flex items-center justify-center space-x-2 border border-white transition">
                 <i class="fa-solid fa-gift text-red-600"></i>
                 <span>Subscribe Now &amp; Earn More</span>
                 <i class="fa-solid fa-chevron-right text-xs"></i>
@@ -205,13 +203,13 @@
             <!-- Bottom Badges -->
             <div class="flex items-center justify-between text-[9px] font-bold text-emerald-300 mt-2.5 px-1">
                 <span><i class="fa-solid fa-circle-check"></i> Be a Subscriber</span>
-                <span><i class="fa-solid fa-circle-check"></i> Get Bonus</span>
+                <span><i class="fa-solid fa-circle-check"></i> 96h Timer</span>
                 <span class="bg-emerald-500 text-slate-950 px-2 py-0.5 rounded-full font-black">Don't Miss Out!</span>
             </div>
         </div>
     </div>
 
-    <!-- DESKTOP SIDE AD #1: 160x600 Skyscraper (Visible on Large Desktop Screens Only) -->
+    <!-- DESKTOP SIDE AD #1: 160x600 Skyscraper -->
     <div class="hidden xl:flex fixed left-3 top-28 z-30 flex-col items-center">
         <span class="text-[9px] text-slate-500 uppercase tracking-widest mb-1">Ad</span>
         <script>
@@ -226,7 +224,7 @@
         <script src="https://bicea.org/22/60a56008a579467eb1b299cd2a7e82df"></script>
     </div>
 
-    <!-- DESKTOP SIDE AD #2: 160x300 Skyscraper (Visible on Large Desktop Screens Only) -->
+    <!-- DESKTOP SIDE AD #2: 160x300 Skyscraper -->
     <div class="hidden xl:flex fixed right-3 top-28 z-30 flex-col items-center">
         <span class="text-[9px] text-slate-500 uppercase tracking-widest mb-1">Ad</span>
         <script>
@@ -241,12 +239,12 @@
         <script src="https://bicea.org/22/eaec6d350a6a2944460ac24981fde44a"></script>
     </div>
 
-    <!-- 24/7 Running Slow Announcement Ticker Bar -->
+    <!-- 24/7 Running Ticker Bar -->
     <div class="bg-gradient-to-r from-red-900 via-amber-900 to-slate-900 border-b border-brand-gold/30 text-brand-gold py-2 px-4 overflow-hidden relative z-40 shadow-md">
         <div class="max-w-4xl mx-auto flex items-center space-x-3">
             <span class="bg-red-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider shrink-0 animate-pulse">Live News</span>
             <marquee scrollamount="3" class="text-xs font-semibold tracking-wide text-amber-200">
-                🚀 Welcome to Free Daily Earnings! Watch ads daily, invite friends to earn $1.00 instantly, get $2.00 joiner bonus & daily $0.10 login bonus! Contact us on YouTube @DXB-ProBot.
+                🚀 Welcome to Free Daily Earnings! Subscribe to our YouTube channel @freedailyearnings_official, get $5.00 extra bonus credited after 96 hours verification!
             </marquee>
         </div>
     </div>
@@ -264,7 +262,6 @@
                 </div>
             </div>
 
-            <!-- Global Language Selector & Dynamic Regional Time -->
             <div class="flex items-center space-x-2">
                 <div class="flex flex-col text-right hidden sm:flex">
                     <span id="regional-time-display" class="text-xs font-mono font-bold text-brand-gold">00:00:00</span>
@@ -283,7 +280,6 @@
                     <option value="tl">Tagalog (Filipino)</option>
                 </select>
 
-                <!-- Header Balance Badge -->
                 <div class="bg-slate-800 border border-slate-700/80 px-3 py-1.5 rounded-full flex items-center space-x-2">
                     <i class="fa-solid fa-wallet text-brand-gold text-sm"></i>
                     <span id="header-balance" class="font-extrabold text-brand-gold text-sm tracking-wide">$0.00</span>
@@ -295,9 +291,8 @@
     <!-- Main Content Container -->
     <main class="max-w-4xl mx-auto w-full px-4 py-6 flex-grow">
 
-        <!-- TOP AD SLOT: 728x90 Leaderboard (Desktop/Tablet) & 320x50 Banner (Mobile) -->
+        <!-- TOP AD SLOT -->
         <div class="mb-5 flex flex-col items-center justify-center overflow-hidden">
-            <!-- Desktop 728x90 -->
             <div class="hidden md:flex justify-center">
                 <script>
                   atOptions = {
@@ -310,7 +305,6 @@
                 </script>
                 <script src="https://bicea.org/22/4fe5469f24b94489a33825b98d01012"></script>
             </div>
-            <!-- Mobile 320x50 -->
             <div class="flex md:hidden justify-center">
                 <script>
                   atOptions = {
@@ -325,7 +319,7 @@
             </div>
         </div>
 
-        <!-- Top Alert Banner: Referral Detection -->
+        <!-- Referral Alert Banner -->
         <div id="referral-alert" class="hidden mb-6 bg-emerald-950/60 border border-emerald-500/40 p-4 rounded-xl flex items-center justify-between text-emerald-300">
             <div class="flex items-center space-x-3">
                 <i class="fa-solid fa-user-plus text-xl text-emerald-400"></i>
@@ -362,7 +356,6 @@
         <!-- ================= PAGE 1: DASHBOARD / WATCH ADS ================= -->
         <section id="page-dashboard" class="space-y-6">
             
-            <!-- User Balance & Goal Dashboard Card -->
             <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 relative overflow-hidden shadow-2xl">
                 <div class="absolute -right-10 -bottom-10 opacity-10 text-brand-gold text-9xl pointer-events-none">
                     <i class="fa-solid fa-coins"></i>
@@ -379,7 +372,6 @@
                         </p>
                     </div>
 
-                    <!-- Mini Quick Stats -->
                     <div class="grid grid-cols-2 gap-3 bg-slate-950/60 p-4 rounded-xl border border-slate-800/80 min-w-[220px]">
                         <div>
                             <span class="text-[10px] uppercase text-slate-400 font-bold block" data-i18n="adsWatched">Ads Watched Today</span>
@@ -392,7 +384,6 @@
                     </div>
                 </div>
 
-                <!-- Withdrawal Progress Bar -->
                 <div class="mt-6 pt-6 border-t border-slate-800">
                     <div class="flex justify-between text-xs font-semibold mb-2">
                         <span class="text-slate-300" data-i18n="targetThreshold">Target Payout Threshold ($100.00)</span>
@@ -408,14 +399,32 @@
                 </div>
             </div>
 
-            <!-- NATIVE BANNER AD SLOT (High CTR In-Feed Unit) -->
+            <!-- YouTube Subscriber Bonus Claim Widget Box -->
+            <div class="bg-gradient-to-r from-blue-950 via-slate-900 to-indigo-950 border border-blue-500/40 rounded-2xl p-5 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center space-x-3.5">
+                    <div class="w-12 h-12 rounded-xl bg-red-600 flex items-center justify-center text-white text-2xl shadow-md shrink-0 border border-red-400">
+                        <i class="fa-brands fa-youtube"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-extrabold text-white text-base">YouTube Subscriber $5 Bonus</h4>
+                        <p class="text-xs text-slate-300">Subscribe our channel &amp; get $5 added after 96 hours verification.</p>
+                    </div>
+                </div>
+                <div id="yt-bonus-container" class="w-full sm:w-auto">
+                    <a href="https://youtube.com/@freedailyearnings_official?si=UlAytq_0o2gOtwaa" target="_blank" onclick="claimYouTubeSubscription()" class="w-full sm:w-auto px-5 py-3 bg-gradient-to-r from-yellow-400 to-amber-500 hover:brightness-110 text-slate-950 font-black text-xs rounded-xl shadow-lg flex items-center justify-center space-x-2 border border-white transition">
+                        <i class="fa-solid fa-gift text-red-600"></i>
+                        <span>Subscribe &amp; Claim $5 (96h)</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- NATIVE BANNER AD SLOT -->
             <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-3 overflow-hidden">
                 <div class="text-[10px] text-slate-500 uppercase tracking-wider mb-1 text-center">Sponsored Partners</div>
                 <script async="async" data-cfasync="false" src="https://bicea.org/21/744737c4f86dc28a7a65fd597874f77b"></script>
                 <div id="container-744737c4f86dc28a7a65fd597874f77b"></div>
             </div>
 
-            <!-- Ad Viewing Section Header -->
             <div class="flex items-center justify-between pt-2">
                 <div>
                     <h3 class="text-xl font-bold text-white flex items-center gap-2">
@@ -428,16 +437,12 @@
                 </span>
             </div>
 
-            <!-- 4 Distinct Ad Trigger Buttons Grid -->
+            <!-- 4 Ad Trigger Buttons Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                
-                <!-- Ad Button 1 -->
                 <div class="bg-slate-800/80 border border-slate-700 hover:border-brand-gold/60 rounded-xl p-5 transition duration-300 flex flex-col justify-between space-y-4">
                     <div class="flex items-start justify-between">
                         <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 font-bold">
-                                01
-                            </div>
+                            <div class="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 font-bold">01</div>
                             <div>
                                 <h4 class="font-bold text-white text-base" data-i18n="adOneTitle">Sponsored Ad #1</h4>
                                 <p class="text-xs text-emerald-400 font-semibold">+ $0.35 Credit</p>
@@ -451,13 +456,10 @@
                     </button>
                 </div>
 
-                <!-- Ad Button 2 -->
                 <div class="bg-slate-800/80 border border-slate-700 hover:border-brand-gold/60 rounded-xl p-5 transition duration-300 flex flex-col justify-between space-y-4">
                     <div class="flex items-start justify-between">
                         <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold">
-                                02
-                            </div>
+                            <div class="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold">02</div>
                             <div>
                                 <h4 class="font-bold text-white text-base" data-i18n="adTwoTitle">Sponsored Ad #2</h4>
                                 <p class="text-xs text-emerald-400 font-semibold">+ $0.35 Credit</p>
@@ -471,13 +473,10 @@
                     </button>
                 </div>
 
-                <!-- Ad Button 3 -->
                 <div class="bg-slate-800/80 border border-slate-700 hover:border-brand-gold/60 rounded-xl p-5 transition duration-300 flex flex-col justify-between space-y-4">
                     <div class="flex items-start justify-between">
                         <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 rounded-lg bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 font-bold">
-                                03
-                            </div>
+                            <div class="w-10 h-10 rounded-lg bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 font-bold">03</div>
                             <div>
                                 <h4 class="font-bold text-white text-base" data-i18n="adThreeTitle">Sponsored Ad #3</h4>
                                 <p class="text-xs text-emerald-400 font-semibold">+ $0.35 Credit</p>
@@ -491,13 +490,10 @@
                     </button>
                 </div>
 
-                <!-- Ad Button 4 -->
                 <div class="bg-slate-800/80 border border-slate-700 hover:border-brand-gold/60 rounded-xl p-5 transition duration-300 flex flex-col justify-between space-y-4">
                     <div class="flex items-start justify-between">
                         <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold">
-                                04
-                            </div>
+                            <div class="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold">04</div>
                             <div>
                                 <h4 class="font-bold text-white text-base" data-i18n="adFourTitle">Sponsored Ad #4</h4>
                                 <p class="text-xs text-emerald-400 font-semibold">+ $0.35 Credit</p>
@@ -512,7 +508,7 @@
                 </div>
             </div>
 
-            <!-- BOTTOM DASHBOARD AD SLOT: 300x250 Medium Rectangle (Works great on both Mobile & Desktop) -->
+            <!-- BOTTOM AD SLOT -->
             <div class="pt-4 flex flex-col items-center justify-center">
                 <span class="text-[10px] text-slate-500 uppercase tracking-wider mb-1">Advertisement</span>
                 <script>
@@ -589,13 +585,12 @@
                     <p class="text-xs text-slate-400 mt-1" data-i18n="withdrawSub">Withdraw your earnings directly to your Wallet or Bank Account.</p>
                 </div>
 
-                <!-- Updated Withdrawal Notice with Direct Clickable YouTube Link -->
                 <div class="bg-amber-950/40 border border-amber-500/40 p-3.5 rounded-xl text-amber-300 text-xs flex items-start space-x-2.5">
                     <i class="fa-solid fa-circle-info text-amber-400 mt-0.5 shrink-0"></i>
                     <span>
                         for withdrawal related news or for new updates subscribe our official youtube channel: 
-                        <a href="https://www.youtube.com/@DXB-ProBot?sub_confirmation=1" target="_blank" class="text-brand-gold font-bold underline hover:text-white transition break-all ml-1">
-                            https://www.youtube.com/@DXB-ProBot
+                        <a href="https://youtube.com/@freedailyearnings_official?si=UlAytq_0o2gOtwaa" target="_blank" class="text-brand-gold font-bold underline hover:text-white transition break-all ml-1">
+                            https://youtube.com/@freedailyearnings_official
                         </a>
                     </span>
                 </div>
@@ -625,7 +620,6 @@
                         </div>
                     </div>
 
-                    <!-- Wallet Fields -->
                     <div id="fields-crypto" class="space-y-3">
                         <div>
                             <label class="block text-xs font-semibold text-slate-300 mb-1" data-i18n="walletAddress">Digital Wallet / Account Address</label>
@@ -633,7 +627,6 @@
                         </div>
                     </div>
 
-                    <!-- Bank Fields (Hidden by default) -->
                     <div id="fields-bank" class="space-y-3 hidden">
                         <div>
                             <label class="block text-xs font-semibold text-slate-300 mb-1" data-i18n="holderName">Account Holder Name</label>
@@ -661,7 +654,7 @@
             </div>
         </section>
 
-        <!-- ================= PAGE 4: GUIDE & RULES ================= -->
+        <!-- ================= PAGE 4: GUIDE & RULES (Activity Log) ================= -->
         <section id="page-instructions" class="hidden space-y-6">
             <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 shadow-2xl space-y-6">
                 <div>
@@ -672,6 +665,13 @@
                 </div>
 
                 <div class="space-y-4 text-xs text-slate-300">
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                        <h4 class="font-bold text-white text-sm flex items-center gap-2">
+                            <i class="fa-brands fa-youtube text-red-500"></i> YouTube Subscriber $5 Bonus (96 Hours Verification)
+                        </h4>
+                        <p>When you subscribe to our YouTube channel, a pending $5 bonus appears in your Activity Log with a 96-hour countdown. Once 96 hours pass, the $5 is automatically credited to your main balance!</p>
+                    </div>
+
                     <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
                         <h4 class="font-bold text-white text-sm flex items-center gap-2">
                             <i class="fa-solid fa-calendar-day text-brand-gold"></i> <span data-i18n="dailyLoginRuleTitle">Daily Login Bonus ($0.10)</span>
@@ -685,13 +685,6 @@
                         </h4>
                         <p data-i18n="cooldownRuleDesc">Watch Ad and Earn Daily! Each ad slot can be viewed once every 24 hours. After viewing, a countdown timer locks the slot for 24 hours.</p>
                     </div>
-
-                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-                        <h4 class="font-bold text-white text-sm flex items-center gap-2">
-                            <i class="fa-solid fa-wallet text-emerald-400"></i> <span data-i18n="thresholdRuleTitle">Payout Threshold ($100)</span>
-                        </h4>
-                        <p data-i18n="thresholdRuleDesc">Reach the minimum target of $100.00 to submit a withdrawal request to your preferred account.</p>
-                    </div>
                 </div>
 
                 <div>
@@ -703,7 +696,7 @@
             </div>
         </section>
 
-        <!-- FOOTER BANNER AD SLOT: 468x60 Banner -->
+        <!-- FOOTER BANNER AD SLOT -->
         <div class="hidden sm:flex justify-center items-center pt-6 overflow-hidden">
             <script>
               atOptions = {
@@ -734,7 +727,6 @@
     <!-- FIREBASE & APP CONTROLLER LOGIC                                            -->
     <!-- =========================================================================== -->
     <script>
-        // --- YOUR FIREBASE PROJECT CONFIGURATION ---
         const firebaseConfig = {
             apiKey: "AIzaSyDRgxFL7ZZ3nT7zHy6GayMfbHeVYoxO3zE",
             authDomain: "dollar-new-investment-app.firebaseapp.com",
@@ -745,7 +737,6 @@
             measurementId: "G-96S7DNDKL4"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
@@ -764,6 +755,7 @@
         const DAILY_LOGIN_BONUS = 0.10;
         const MIN_WITHDRAWAL_LIMIT = 100.00;
         const AD_COOLDOWN_MS = 24 * 60 * 60 * 1000;
+        const YT_VERIFICATION_MS = 96 * 60 * 60 * 1000; // 96 Hours in milliseconds
 
         const translations = {
             en: {
@@ -814,9 +806,9 @@
                 dailyLoginRuleTitle: "Daily Login Bonus ($0.10)",
                 dailyLoginRuleDesc: "Open the app once every 24 hours to automatically collect your $0.10 daily login reward!",
                 cooldownRuleTitle: "24-Hour Ad Cooldown Rule",
-                cooldownRuleDesc: "Watch Ad and Earn Daily! Each ad slot can be viewed once every 24 hours. After viewing, a countdown timer locks the slot for 24 hours.",
+                cooldownRuleDesc: "Watch Ad and Earn Daily! Each ad slot can be viewed once every 24 hours.",
                 thresholdRuleTitle: "Payout Threshold ($100)",
-                thresholdRuleDesc: "Reach the minimum target of $100.00 to submit a withdrawal request to your preferred account.",
+                thresholdRuleDesc: "Reach the minimum target of $100.00 to submit a withdrawal request.",
                 activityLog: "Activity Log",
                 noActivityLog: "No activity logged yet. Start watching ads!"
             },
@@ -824,7 +816,7 @@
                 appTitle: "ڈیلی ریوارڈز",
                 appSubtitle: "اشتہار دیکھیں اور روزانہ کمائیں",
                 joinedReferralTitle: "ریفرل لنک سے شامل ہوئے!",
-                joinedReferralSub: "آپ کو $2.00 جوائنر بونس مل گیا ہے اور ریفر کرنے वाले को بھی کمائی مل گئی ہے!",
+                joinedReferralSub: "آپ کو $2.00 جوائنر بونس مل گیا ہے!",
                 tabWatch: "اشتہار دیکھیں",
                 tabRefer: "دوستوں کو لائیں",
                 tabWithdraw: "پیسے نکالیں",
@@ -845,13 +837,13 @@
                 dailyOffer: "روزانہ کی پیشکش",
                 btnWatchAd: "اشتہار دیکھیں اور روزانہ کمائیں",
                 inviteTitle: "دوستوں کو دعوت دیں اور کمائیں",
-                inviteSub: "اپنا لنک شیئر کریں۔ دوست کے موبائل پر لنک کھولنے پر فوری $1.00 آپ کو اور $2.00 دوست کو ملیں گے!",
+                inviteSub: "اپنا لنک شیئر کریں۔",
                 referralLinkLabel: "آپ کا ذاتی ریفرل لنک",
                 btnCopy: "کاپی کریں",
                 totalFriends: "کل مدعو دوست",
                 refEarningsLabel: "کل ریفرل کمائی",
                 referralHistory: "ریفرل ہسٹری",
-                noReferralsYet: "ابھی تک کوئی ریفرل نہیں ہے۔ لنک کاپی کریں اور دوستوں کو بھیجیں!",
+                noReferralsYet: "ابھی تک کوئی ریفرل نہیں ہے۔",
                 withdrawTitle: "رقم نکالنے کی درخواست",
                 withdrawSub: "اپنی کمائی اپنے والٹ یا بینک اکاؤنٹ میں نکالیں۔",
                 availableBalance: "موجودہ بقایا",
@@ -864,15 +856,15 @@
                 withdrawAmount: "نکالنے کی رقم ($)",
                 minRequiredBtn: "کم از کم $100.00 ضروری ہے",
                 guideTitle: "رہنمائی اور قواعد",
-                guideSub: "اشتہار دیکھیں اور روزانہ 24 گھنٹے کے ری سیٹ کے ساتھ کمائیں۔",
+                guideSub: "اشتہار دیکھیں اور روزانہ کمائیں۔",
                 dailyLoginRuleTitle: "روزانہ لاگ ان بونس ($0.10)",
-                dailyLoginRuleDesc: "ہر 24 گھنٹے میں ایک بار ایپ کھولیں اور $0.10 روزانہ کا انعام حاصل کریں!",
+                dailyLoginRuleDesc: "ہر 24 گھنٹے میں ایک بار ایپ کھولیں اور $0.10 انعام حاصل کریں!",
                 cooldownRuleTitle: "24 گھنٹے کے انتظار کا قانون",
                 cooldownRuleDesc: "ہر اشتہار 24 گھنٹے میں صرف ایک بار دیکھا جا سکتا ہے۔",
                 thresholdRuleTitle: "کم از کم رقم کا قانون ($100)",
                 thresholdRuleDesc: "$100.00 کا ہدف پورا کرنے کے بعد آپ رقم نکالنے کی درخواست بھیج سکتے ہیں۔",
                 activityLog: "سرگرمی کی ہسٹری",
-                noActivityLog: "ابھی تک کوئی سرگرمی نہیں ہے۔ اشتہار دیکھنا شروع کریں!"
+                noActivityLog: "ابھی تک کوئی سرگرمی نہیں ہے۔"
             }
         };
 
@@ -884,6 +876,8 @@
             referralEarnings: 0.00,
             userId: '',
             isYtSubscribed: false,
+            ytClaimTimestamp: 0,
+            ytBonusCredited: false,
             firstOpenTime: 0,
             lastLoginBonusDate: '',
             activityLogs: [],
@@ -895,29 +889,28 @@
         let clockInterval = null;
 
         window.onload = async function() {
-            // Restore cached local balance first to prevent flicker
             const cachedBal = localStorage.getItem('cached_user_balance');
             if (cachedBal) {
                 userData.balance = parseFloat(cachedBal);
             }
 
-            // Start 6-Second Welcome Popup Countdown Every Time App Opens
             startWelcomePopupCountdown();
-
             await initUserSession();
             checkDailyLoginBonus();
+            checkYouTubeBonusStatus();
             updateUI();
             
             if (timerInterval) clearInterval(timerInterval);
-            timerInterval = setInterval(updateAdCooldownTimers, 1000);
-            updateAdCooldownTimers();
+            timerInterval = setInterval(() => {
+                updateAdCooldownTimers();
+                checkYouTubeBonusStatus();
+            }, 1000);
 
             if (clockInterval) clearInterval(clockInterval);
             clockInterval = setInterval(updateRegionalTime, 1000);
             updateRegionalTime();
         };
 
-        // --- 6-SECOND COUNTDOWN POPUP LOGIC (Triggers Every Time) ---
         function startWelcomePopupCountdown() {
             const modal = document.getElementById('welcome-promo-modal');
             const secEl = document.getElementById('welcome-countdown-sec');
@@ -938,7 +931,6 @@
             }, 1000);
         }
 
-        // --- DAILY LOGIN BONUS CHECK ($0.10) ---
         async function checkDailyLoginBonus() {
             const todayStr = new Date().toDateString();
             if (userData.lastLoginBonusDate !== todayStr) {
@@ -947,6 +939,44 @@
                 logActivity(`Daily Login Bonus: +$${DAILY_LOGIN_BONUS.toFixed(2)}`, DAILY_LOGIN_BONUS);
                 await saveUserData();
                 showToast(`Daily Login Bonus Claimed! +$${DAILY_LOGIN_BONUS.toFixed(2)}`, 'success');
+            }
+        }
+
+        // --- YOUTUBE SUBSCRIPTION 96-HOUR VERIFICATION LOGIC ---
+        function claimYouTubeSubscription() {
+            if (userData.ytBonusCredited) {
+                showToast("YouTube subscriber bonus already credited!", "info");
+                return;
+            }
+            if (userData.isYtSubscribed) {
+                showToast("YouTube bonus is already pending 96-hour verification!", "info");
+                return;
+            }
+
+            userData.isYtSubscribed = true;
+            userData.ytClaimTimestamp = Date.now();
+            
+            logActivity(`YouTube Subscription Claimed ($5.00 pending 96h verification)`, 5.00, true);
+            saveUserData();
+            updateUI();
+            showToast("YouTube subscription registered! $5 will be credited after 96 hours verification.", "success");
+        }
+
+        function checkYouTubeBonusStatus() {
+            if (userData.isYtSubscribed && !userData.ytBonusCredited) {
+                const now = Date.now();
+                const elapsed = now - userData.ytClaimTimestamp;
+
+                if (elapsed >= YT_VERIFICATION_MS) {
+                    userData.ytBonusCredited = true;
+                    userData.balance += 5.00;
+                    
+                    // Update activity log status from pending to credited
+                    logActivity(`YouTube Subscription Verified & Credited: +$5.00`, 5.00, false);
+                    saveUserData();
+                    updateUI();
+                    showToast("Congratulations! $5 YouTube bonus has been added to your balance!", "success");
+                }
             }
         }
 
@@ -979,7 +1009,6 @@
             timeEl.innerText = new Date().toLocaleTimeString();
         }
 
-        // --- CLOUD FIREBASE SESSION & REAL-TIME REFERRAL SYNC ---
         async function initUserSession() {
             let localUserId = localStorage.getItem('app_unique_user_id');
             let firstOpen = localStorage.getItem('app_first_open_time');
@@ -997,6 +1026,8 @@
                 userData.referralEarnings = 0.00;
                 userData.referralsCount = 0;
                 userData.isYtSubscribed = false;
+                userData.ytClaimTimestamp = 0;
+                userData.ytBonusCredited = false;
                 userData.firstOpenTime = parseInt(firstOpen);
                 userData.lastLoginBonusDate = '';
                 userData.activityLogs = [];
@@ -1017,7 +1048,6 @@
                 }
             }
 
-            // Check referral link parameter
             const urlParams = new URLSearchParams(window.location.search);
             const refCode = urlParams.get('ref');
 
@@ -1047,7 +1077,8 @@
                         logs.unshift({
                             title: `Friend Joined via Referral (${userData.userId}): +$${INVITER_REFERRAL_BONUS.toFixed(2)}`,
                             amount: INVITER_REFERRAL_BONUS,
-                            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                            isPending: false
                         });
 
                         await inviterRef.update({
@@ -1068,7 +1099,7 @@
             db.collection("users").doc(userData.userId).onSnapshot((doc) => {
                 if (doc.exists) {
                     const cloudData = doc.data();
-                    if (cloudData.balance !== userData.balance || cloudData.referralsCount !== userData.referralsCount || (cloudData.referredFriends && cloudData.referredFriends.length !== userData.referredFriends.length)) {
+                    if (cloudData.balance !== userData.balance || cloudData.referralsCount !== userData.referralsCount) {
                         userData = { ...userData, ...cloudData };
                         localStorage.setItem('cached_user_balance', userData.balance.toString());
                         updateUI();
@@ -1124,6 +1155,14 @@
                 submitBtn.disabled = true;
                 submitBtn.className = "w-full py-3.5 bg-slate-700 text-slate-400 font-extrabold rounded-xl transition duration-300 flex items-center justify-center space-x-2 cursor-not-allowed";
                 btnText.innerText = `Minimum $${MIN_WITHDRAWAL_LIMIT.toFixed(2)} Required`;
+            }
+
+            // Update YouTube Bonus Box UI state
+            const ytBox = document.getElementById('yt-bonus-container');
+            if (userData.ytBonusCredited) {
+                ytBox.innerHTML = `<span class="bg-emerald-500/20 border border-emerald-500 text-emerald-300 px-3 py-2 rounded-xl text-xs font-bold block text-center"><i class="fa-solid fa-check"></i> $5 Credited</span>`;
+            } else if (userData.isYtSubscribed) {
+                ytBox.innerHTML = `<span class="bg-amber-500/20 border border-amber-500 text-amber-300 px-3 py-2 rounded-xl text-xs font-bold block text-center"><i class="fa-solid fa-clock"></i> 96h Verification Pending</span>`;
             }
 
             renderActivityLogs();
@@ -1183,7 +1222,7 @@
             const targetAdUrl = adRevenueLinks[adNumber] || MONETAG_DIRECT_LINK;
             window.open(targetAdUrl, '_blank');
 
-            const timer = setInterval(async () => {
+            let timer = setInterval(async () => {
                 countdown--;
                 if (countdown > 0) {
                     btnText.innerHTML = `Loading Ad (${countdown}s)...`;
@@ -1195,7 +1234,7 @@
                     userData.balance += AD_REWARD_AMOUNT;
                     userData.adsWatchedToday += 1;
                     
-                    logActivity(`Watched Ad #${adNumber} ($0.35)`, AD_REWARD_AMOUNT);
+                    logActivity(`Watched Ad #${adNumber} ($0.35)`, AD_REWARD_AMOUNT, false);
                     await saveUserData();
                     updateUI();
                     updateAdCooldownTimers();
@@ -1205,15 +1244,17 @@
             }, 1000);
         }
 
-        function logActivity(title, amount) {
+        function logActivity(title, amount, isPending = false) {
             if (!userData.activityLogs) userData.activityLogs = [];
             userData.activityLogs.unshift({
                 title: title,
                 amount: amount,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                isPending: isPending,
+                timestamp: Date.now()
             });
 
-            if (userData.activityLogs.length > 15) {
+            if (userData.activityLogs.length > 20) {
                 userData.activityLogs.pop();
             }
         }
@@ -1225,18 +1266,34 @@
                 return;
             }
 
-            container.innerHTML = userData.activityLogs.map(log => `
-                <div class="flex items-center justify-between p-2 rounded-lg bg-slate-900/60 border border-slate-800">
-                    <div class="flex items-center space-x-2">
-                        <i class="fa-solid fa-circle-check text-emerald-400"></i>
-                        <span class="font-medium text-white">${log.title}</span>
+            const now = Date.now();
+
+            container.innerHTML = userData.activityLogs.map(log => {
+                let badgeText = `+$${log.amount.toFixed(2)}`;
+                let badgeClass = "text-emerald-400";
+
+                if (log.isPending && !userData.ytBonusCredited) {
+                    const elapsed = now - (log.timestamp || now);
+                    const remaining = Math.max(0, YT_VERIFICATION_MS - elapsed);
+                    const remHours = Math.floor(remaining / (1000 * 60 * 60));
+                    const remMins = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                    badgeText = `Pending (${remHours}h ${remMins}m left)`;
+                    badgeClass = "text-amber-400 text-[10px]";
+                }
+
+                return `
+                    <div class="flex items-center justify-between p-2 rounded-lg bg-slate-900/60 border border-slate-800">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                            <span class="font-medium text-white">${log.title}</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="font-bold ${badgeClass}">${badgeText}</span>
+                            <span class="text-[10px] text-slate-500 block">${log.time}</span>
+                        </div>
                     </div>
-                    <div class="text-right">
-                        <span class="font-bold text-emerald-400">+$${log.amount.toFixed(2)}</span>
-                        <span class="text-[10px] text-slate-500 block">${log.time}</span>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function renderReferredFriends() {
@@ -1315,7 +1372,7 @@
             }
 
             userData.balance -= amountInput;
-            logActivity(`Withdrawal Request Submitted`, -amountInput);
+            logActivity(`Withdrawal Request Submitted`, -amountInput, false);
             await saveUserData();
             updateUI();
 
