@@ -209,6 +209,24 @@
         </div>
     </div>
 
+    <!-- RESTORE ACCOUNT MODAL -->
+    <div id="restore-id-modal" class="hidden fixed inset-0 z-50 items-center justify-center p-4 bg-slate-950/85 backdrop-blur-sm">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-sm w-full p-5 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-rotate-left text-brand-gold"></i> Restore Old Account
+                </h3>
+                <button onclick="closeRestoreModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p class="text-xs text-slate-300">Enter your previous User ID (e.g., <span class="text-brand-gold font-mono">USER101046</span>) to restore your balance, referrals, and activity logs:</p>
+            <input type="text" id="restore-id-input" placeholder="USER101046" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white font-mono uppercase outline-none focus:border-brand-gold">
+            <div class="flex gap-2">
+                <button onclick="closeRestoreModal()" class="w-1/2 py-2.5 bg-slate-800 text-slate-300 font-bold text-xs rounded-xl hover:bg-slate-700">Cancel</button>
+                <button onclick="executeRestoreAccount()" class="w-1/2 py-2.5 bg-brand-gold text-slate-950 font-extrabold text-xs rounded-xl hover:brightness-110">Restore Record</button>
+            </div>
+        </div>
+    </div>
+
     <!-- DESKTOP SIDE AD #1: 160x600 Skyscraper -->
     <div class="hidden xl:flex fixed left-3 top-28 z-30 flex-col items-center">
         <span class="text-[9px] text-slate-500 uppercase tracking-widest mb-1">Ad</span>
@@ -258,7 +276,12 @@
                 </div>
                 <div>
                     <h1 class="font-bold text-lg leading-tight tracking-wide text-white"><span data-i18n="appTitle">Daily Rewards</span></h1>
-                    <p class="text-xs text-slate-400" data-i18n="appSubtitle">Watch Ad and Earn Daily</p>
+                    <div class="flex items-center gap-2">
+                        <span id="display-user-id" class="text-[11px] font-mono text-slate-400">ID: Loading...</span>
+                        <button onclick="openRestoreModal()" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-brand-gold border border-slate-700 px-1.5 py-0.5 rounded font-semibold transition" title="Restore Old Record">
+                            <i class="fa-solid fa-rotate-left"></i> Restore
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -852,7 +875,7 @@
                 bankTransfer: "بینک ٹرانسفر / موبائل اکاؤنٹ",
                 walletAddress: "والٹ ایڈریس / اکاؤنٹ نمبر",
                 holderName: "اکاؤنٹ ہولڈر کا نام",
-                accountNumber: "آئی بی اے എൻ / اکاؤنٹ نمبر",
+                accountNumber: "آئی بی اے این / اکاؤنٹ نمبر",
                 withdrawAmount: "نکالنے کی رقم ($)",
                 minRequiredBtn: "کم از کم $100.00 ضروری ہے",
                 guideTitle: "رہنمائی اور قواعد",
@@ -1003,6 +1026,49 @@
             timeEl.innerText = new Date().toLocaleTimeString();
         }
 
+        function openRestoreModal() {
+            const modal = document.getElementById('restore-id-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function closeRestoreModal() {
+            const modal = document.getElementById('restore-id-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        async function executeRestoreAccount() {
+            const inputEl = document.getElementById('restore-id-input');
+            if (!inputEl) return;
+            const targetId = inputEl.value.trim().toUpperCase();
+            if (!targetId) {
+                showToast("Please enter a valid User ID!", "error");
+                return;
+            }
+
+            try {
+                const doc = await db.collection("users").doc(targetId).get();
+                if (doc.exists) {
+                    localStorage.setItem('app_unique_user_id', targetId);
+                    userData = { ...userData, ...doc.data(), userId: targetId };
+                    localStorage.setItem('cached_user_balance', userData.balance.toString());
+                    closeRestoreModal();
+                    updateUI();
+                    showToast(`Account ${targetId} restored successfully!`, "success");
+                    setTimeout(() => location.reload(), 800);
+                } else {
+                    showToast(`User ID ${targetId} not found in database.`, "error");
+                }
+            } catch (err) {
+                showToast("Error restoring account. Please try again.", "error");
+            }
+        }
+
         async function initUserSession() {
             let localUserId = localStorage.getItem('app_unique_user_id');
             let firstOpen = localStorage.getItem('app_first_open_time');
@@ -1015,10 +1081,21 @@
             const urlParams = new URLSearchParams(window.location.search);
             const refCode = urlParams.get('ref');
 
-            // Agar local storage mein ID nahi hai, toh ek naya ID generate karo
+            // If no local ID found, recover existing record from Firestore before generating a new zero account
             if (!localUserId) {
-                localUserId = 'USER' + Math.floor(100000 + Math.random() * 900000);
-                localStorage.setItem('app_unique_user_id', localUserId);
+                try {
+                    const snapshot = await db.collection("users").limit(1).get();
+                    if (!snapshot.empty) {
+                        localUserId = snapshot.docs[0].id;
+                        localStorage.setItem('app_unique_user_id', localUserId);
+                    } else {
+                        localUserId = 'USER' + Math.floor(100000 + Math.random() * 900000);
+                        localStorage.setItem('app_unique_user_id', localUserId);
+                    }
+                } catch (e) {
+                    localUserId = 'USER' + Math.floor(100000 + Math.random() * 900000);
+                    localStorage.setItem('app_unique_user_id', localUserId);
+                }
             }
 
             userData.userId = localUserId;
@@ -1026,12 +1103,10 @@
             let doc = await docRef.get();
 
             if (doc.exists) {
-                // Firestore se purana data mil gaya! Load kar lo.
                 const fetchedData = doc.data();
                 userData = { ...userData, ...fetchedData };
                 localStorage.setItem('cached_user_balance', userData.balance.toString());
             } else {
-                // Agar yeh ID database mein nahi hai, toh database se koi bhi pehla mojooda record ya cached balance check karo
                 const cachedBal = localStorage.getItem('cached_user_balance');
                 if (cachedBal) {
                     userData.balance = parseFloat(cachedBal);
@@ -1112,6 +1187,11 @@
         function updateUI() {
             const formattedBalance = `$${userData.balance.toFixed(2)}`;
             
+            const userIdEl = document.getElementById('display-user-id');
+            if (userIdEl && userData.userId) {
+                userIdEl.innerText = `ID: ${userData.userId}`;
+            }
+
             document.getElementById('header-balance').innerText = formattedBalance;
             document.getElementById('dashboard-balance').innerText = formattedBalance;
             document.getElementById('withdraw-available-balance').innerText = formattedBalance;
