@@ -30,7 +30,7 @@
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Font Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- Firebase App & Firestore SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -91,9 +91,125 @@
         [dir="rtl"] {
             text-align: right;
         }
+
+        @keyframes popIn {
+            0% { transform: scale(0.85); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-pop-in {
+            animation: popIn 0.3s ease-out forwards;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between relative">
+
+    <!-- =========================================================================== -->
+    <!-- 6-SECOND AUTO-DISMISS PROMO POPUP (Shows Every Time User Opens App)          -->
+    <!-- =========================================================================== -->
+    <div id="welcome-promo-modal" style="display: flex; z-index: 9999999;" class="fixed inset-0 items-center justify-center p-3 bg-slate-950/90 backdrop-blur-md transition-opacity duration-300">
+        <div class="animate-pop-in relative w-full max-w-md rounded-2xl overflow-hidden border-2 border-yellow-400 shadow-[0_0_40px_rgba(250,204,21,0.45)] bg-gradient-to-b from-blue-900 via-indigo-950 to-slate-950 text-white p-4">
+
+            <!-- Top Countdown Pill -->
+            <div class="flex items-center justify-between mb-2">
+                <span class="bg-red-600 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1 shadow">
+                    <i class="fa-brands fa-youtube"></i> Special Offer
+                </span>
+                <div class="bg-slate-950/90 border border-yellow-400/60 px-3 py-1 rounded-full flex items-center space-x-1.5 shadow">
+                    <i class="fa-solid fa-hourglass-half text-yellow-400 text-xs animate-spin"></i>
+                    <span class="text-[11px] font-bold text-slate-200">Closing in</span>
+                    <span id="welcome-countdown-sec" class="text-xs font-black text-yellow-400">6s</span>
+                </div>
+            </div>
+
+            <!-- Header Banner Matching Image -->
+            <div class="relative flex items-center justify-between gap-2 bg-gradient-to-r from-blue-800/80 to-indigo-900/80 border border-blue-400/30 rounded-xl p-3 mb-3">
+                <div class="flex items-center space-x-2.5">
+                    <div class="w-11 h-11 rounded-xl bg-red-600 flex items-center justify-center text-white text-2xl shadow-lg shrink-0 border border-red-400">
+                        <i class="fa-brands fa-youtube"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-base sm:text-lg font-black leading-tight text-white drop-shadow">
+                            Subscribe <span class="text-yellow-300 block">YouTube Channel</span>
+                        </h2>
+                    </div>
+                </div>
+                <!-- Red Corner Badge: Get $5 Dollar Extra -->
+                <div class="bg-gradient-to-br from-red-500 to-red-700 border-2 border-yellow-300 rounded-xl px-2.5 py-1.5 text-center shadow-lg transform rotate-3 shrink-0">
+                    <span class="block text-[9px] font-extrabold uppercase text-yellow-200 leading-none">Get</span>
+                    <span class="block text-sm font-black text-white leading-tight">$5 Dollar</span>
+                    <span class="block text-[10px] font-extrabold text-yellow-300 leading-none">Extra</span>
+                </div>
+            </div>
+
+            <!-- Middle Hero Highlight -->
+            <div class="bg-gradient-to-r from-amber-500/20 via-yellow-500/25 to-amber-500/20 border border-yellow-400/50 rounded-xl p-3 text-center mb-3 relative overflow-hidden">
+                <p class="text-xs font-extrabold text-white tracking-wide">
+                    Just Subscribe or Comment &amp; Earn
+                </p>
+                <div class="my-1 inline-block bg-yellow-400 text-red-600 font-black text-2xl sm:text-3xl px-5 py-0.5 rounded-xl shadow-md border-2 border-white">
+                    $5 EXTRA!
+                </div>
+            </div>
+
+            <!-- 3-Column Info Grid -->
+            <div class="grid grid-cols-3 gap-2 mb-3 text-[10px]">
+                <div class="bg-slate-900/90 border border-blue-500/30 rounded-xl p-2 space-y-1">
+                    <div class="font-extrabold text-yellow-300 text-[11px] border-b border-slate-700 pb-0.5">How to Join?</div>
+                    <p class="flex items-start gap-1 text-slate-200"><i class="fa-solid fa-circle-check text-emerald-400 mt-0.5"></i><span>Subscribe Channel</span></p>
+                    <p class="flex items-start gap-1 text-slate-200"><i class="fa-solid fa-circle-check text-emerald-400 mt-0.5"></i><span>Comment <b>"Subscription Done"</b></span></p>
+                    <p class="flex items-start gap-1 text-slate-200"><i class="fa-solid fa-circle-check text-emerald-400 mt-0.5"></i><span>Get $5 Extra</span></p>
+                </div>
+
+                <div class="bg-gradient-to-b from-blue-900/90 to-slate-900/90 border border-yellow-400/50 rounded-xl p-2 flex flex-col items-center justify-center text-center">
+                    <span class="text-[10px] font-bold text-yellow-200 uppercase">Your Bonus</span>
+                    <span class="text-2xl sm:text-3xl font-black text-red-500 drop-shadow-[0_2px_2px_rgba(255,255,255,0.8)] my-1">+$5</span>
+                    <span class="text-[9px] text-emerald-300 font-semibold">Instant Credit</span>
+                </div>
+
+                <div class="bg-slate-900/90 border border-blue-500/30 rounded-xl p-2 flex flex-col justify-between">
+                    <div class="font-extrabold text-yellow-300 text-[10px] border-b border-slate-700 pb-0.5">YouTube Link:</div>
+                    <a href="https://www.youtube.com/@DXB-ProBot?sub_confirmation=1" target="_blank" class="my-1 bg-white text-slate-900 font-bold text-[9px] p-1 rounded flex items-center gap-1 break-all hover:bg-yellow-200 transition">
+                        <i class="fa-brands fa-youtube text-red-600 text-xs shrink-0"></i>
+                        <span>youtube.com/@DXB-ProBot</span>
+                    </a>
+                    <span class="text-[9px] text-amber-200 leading-tight">Subscribe &amp; Comment to Claim!</span>
+                </div>
+            </div>
+
+            <!-- Follow These Simple Steps Bar -->
+            <div class="bg-slate-950/80 border border-slate-700 rounded-xl p-2 mb-3">
+                <div class="text-center text-[10px] font-extrabold text-yellow-400 uppercase mb-1.5">Follow These Simple Steps:</div>
+                <div class="grid grid-cols-3 gap-1 text-center text-[10px] font-bold">
+                    <div class="bg-slate-900 rounded-lg p-1.5 border border-slate-800">
+                        <span class="inline-block w-4 h-4 rounded-full bg-yellow-400 text-slate-950 font-black text-[9px] leading-4 mb-0.5">1</span>
+                        <span class="block text-white">Subscribe Channel</span>
+                    </div>
+                    <div class="bg-slate-900 rounded-lg p-1.5 border border-slate-800">
+                        <span class="inline-block w-4 h-4 rounded-full bg-yellow-400 text-slate-950 font-black text-[9px] leading-4 mb-0.5">2</span>
+                        <span class="block text-white">Comment "Done"</span>
+                    </div>
+                    <div class="bg-slate-900 rounded-lg p-1.5 border border-slate-800">
+                        <span class="inline-block w-4 h-4 rounded-full bg-yellow-400 text-slate-950 font-black text-[9px] leading-4 mb-0.5">3</span>
+                        <span class="block text-emerald-400">Get $5 Extra</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Yellow Bottom CTA Button -->
+            <a href="https://www.youtube.com/@DXB-ProBot?sub_confirmation=1" target="_blank" class="w-full py-2.5 bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 hover:brightness-110 text-slate-950 font-black text-xs sm:text-sm rounded-xl shadow-lg flex items-center justify-center space-x-2 border border-white transition">
+                <i class="fa-solid fa-gift text-red-600"></i>
+                <span>Subscribe Now &amp; Earn More</span>
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+            </a>
+
+            <!-- Bottom Badges -->
+            <div class="flex items-center justify-between text-[9px] font-bold text-emerald-300 mt-2.5 px-1">
+                <span><i class="fa-solid fa-circle-check"></i> Be a Subscriber</span>
+                <span><i class="fa-solid fa-circle-check"></i> Get Bonus</span>
+                <span class="bg-emerald-500 text-slate-950 px-2 py-0.5 rounded-full font-black">Don't Miss Out!</span>
+            </div>
+        </div>
+    </div>
 
     <!-- DESKTOP SIDE AD #1: 160x600 Skyscraper (Visible on Large Desktop Screens Only) -->
     <div class="hidden xl:flex fixed left-3 top-28 z-30 flex-col items-center">
@@ -130,7 +246,7 @@
         <div class="max-w-4xl mx-auto flex items-center space-x-3">
             <span class="bg-red-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider shrink-0 animate-pulse">Live News</span>
             <marquee scrollamount="3" class="text-xs font-semibold tracking-wide text-amber-200">
-                🚀 Welcome to Free Daily Earnings! Watch ads daily, invite friends to earn $1.00 instantly, get $2.00 joiner bonus & daily $0.10 login bonus! Contact us on YouTube @freedailyearnings_official.
+                🚀 Welcome to Free Daily Earnings! Watch ads daily, invite friends to earn $1.00 instantly, get $2.00 joiner bonus & daily $0.10 login bonus! Contact us on YouTube @DXB-ProBot.
             </marquee>
         </div>
     </div>
@@ -305,7 +421,7 @@
                     <h3 class="text-xl font-bold text-white flex items-center gap-2">
                         <i class="fa-solid fa-circle-play text-brand-gold"></i> <span data-i18n="sponsoredOffers">Sponsored Ad Offers</span>
                     </h3>
-                    <p class="text-xs text-slate-400" data-i18n="watchAdSub">Watch Ad and Earn Daily ($0.35 per view)![cite: 1]</p>
+                    <p class="text-xs text-slate-400" data-i18n="watchAdSub">Watch Ad and Earn Daily ($0.35 per view)!</p>
                 </div>
                 <span class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs px-2.5 py-1 rounded-md font-semibold animate-pulse" data-i18n="highPaying">
                     High Paying
@@ -396,7 +512,7 @@
                 </div>
             </div>
 
-            <!-- BOTTOM DASHBOARD AD SLOT: 300x250 Medium Rectangle (Adsterra Unit #6) -->
+            <!-- BOTTOM DASHBOARD AD SLOT: 300x250 Medium Rectangle (Works great on both Mobile & Desktop) -->
             <div class="pt-4 flex flex-col items-center justify-center">
                 <span class="text-[10px] text-slate-500 uppercase tracking-wider mb-1">Advertisement</span>
                 <script>
@@ -478,8 +594,8 @@
                     <i class="fa-solid fa-circle-info text-amber-400 mt-0.5 shrink-0"></i>
                     <span>
                         for withdrawal related news or for new updates subscribe our official youtube channel: 
-                        <a href="https://www.youtube.com/@freedailyearnings_official?sub_confirmation=1" target="_blank" class="text-brand-gold font-bold underline hover:text-white transition break-all ml-1">
-                            https://www.youtube.com/@freedailyearnings_official
+                        <a href="https://www.youtube.com/@DXB-ProBot?sub_confirmation=1" target="_blank" class="text-brand-gold font-bold underline hover:text-white transition break-all ml-1">
+                            https://www.youtube.com/@DXB-ProBot
                         </a>
                     </span>
                 </div>
@@ -587,7 +703,7 @@
             </div>
         </section>
 
-        <!-- FOOTER BANNER AD SLOT: 468x60 Banner (Adsterra Unit #1) -->
+        <!-- FOOTER BANNER AD SLOT: 468x60 Banner -->
         <div class="hidden sm:flex justify-center items-center pt-6 overflow-hidden">
             <script>
               atOptions = {
@@ -615,46 +731,6 @@
     </div>
 
     <!-- =========================================================================== -->
-    <!-- YOUTUBE SUBSCRIBE POPUP MODAL (Triggers Exactly 23 Hours After First Open)  -->
-    <!-- =========================================================================== -->
-    <div id="youtube-modal" style="display: none; z-index: 999999;" class="fixed inset-0 items-center justify-center p-4 bg-slate-950/95 backdrop-blur-md transition-opacity duration-300">
-        <div class="bg-gradient-to-b from-slate-900 to-slate-800 border border-brand-gold/40 rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl relative transform scale-100 transition-transform duration-300">
-
-            <!-- Red Youtube Badge Icon -->
-            <div class="w-16 h-16 rounded-2xl bg-red-600/10 border border-red-500/30 flex items-center justify-center mx-auto mb-4 text-red-500 text-3xl shadow-lg animate-bounce">
-                <i class="fa-brands fa-youtube"></i>
-            </div>
-
-            <!-- Heading -->
-            <h3 class="text-xl font-extrabold text-white mb-1">Official YouTube Channel!</h3>
-            <p class="text-xs text-brand-gold font-semibold mb-4">Join Free Daily Earnings Community</p>
-
-            <!-- Bullet Highlights -->
-            <div class="bg-slate-950/70 p-3.5 rounded-xl border border-slate-800 text-left space-y-2 mb-5 text-xs text-slate-300">
-                <div class="flex items-center space-x-2.5">
-                    <i class="fa-solid fa-circle-check text-emerald-400"></i>
-                    <span><b>Live News & Updates:</b> App notifications & guides.</span>
-                </div>
-                <div class="flex items-center space-x-2.5">
-                    <i class="fa-solid fa-circle-check text-emerald-400"></i>
-                    <span><b>Withdrawal Proofs:</b> Real cashout video step-by-step.</span>
-                </div>
-                <div class="flex items-center space-x-2.5">
-                    <i class="fa-solid fa-circle-check text-emerald-400"></i>
-                    <span><b>Direct Chat & Support:</b> Live Q&A and help.</span>
-                </div>
-            </div>
-
-            <!-- Subscribe Action Button with exact channel link -->
-            <a href="https://www.youtube.com/@freedailyearnings_official?sub_confirmation=1" target="_blank" onclick="confirmSubscription()" class="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white font-extrabold text-sm rounded-xl transition-all shadow-lg flex items-center justify-center space-x-2 btn-glow">
-                <i class="fa-brands fa-youtube text-lg"></i>
-                <span>SUBSCRIBE NOW</span>
-            </a>
-            <p class="text-[10px] text-slate-400 mt-3 italic">Note: Popup will stay until you subscribe to our channel.</p>
-        </div>
-    </div>
-
-    <!-- =========================================================================== -->
     <!-- FIREBASE & APP CONTROLLER LOGIC                                            -->
     <!-- =========================================================================== -->
     <script>
@@ -673,7 +749,6 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // REPLACED GOOGLE/ADMOB WITH MONETAG DIRECT LINKS FOR AD TRIGGERS
         const MONETAG_DIRECT_LINK = "https://uplcm.com/4/12172347";
 
         const adRevenueLinks = {
@@ -689,7 +764,6 @@
         const DAILY_LOGIN_BONUS = 0.10;
         const MIN_WITHDRAWAL_LIMIT = 100.00;
         const AD_COOLDOWN_MS = 24 * 60 * 60 * 1000;
-        const YT_POPUP_DELAY_MS = 23 * 60 * 60 * 1000; // 23 Hours in milliseconds
 
         const translations = {
             en: {
@@ -750,7 +824,7 @@
                 appTitle: "ڈیلی ریوارڈز",
                 appSubtitle: "اشتہار دیکھیں اور روزانہ کمائیں",
                 joinedReferralTitle: "ریفرل لنک سے شامل ہوئے!",
-                joinedReferralSub: "آپ کو $2.00 جوائنر بونس مل گیا ہے اور ریفر کرنے والے کو بھی کمائی مل گئی ہے!",
+                joinedReferralSub: "آپ کو $2.00 جوائنر بونس مل گیا ہے اور ریفر کرنے वाले को بھی کمائی مل گئی ہے!",
                 tabWatch: "اشتہار دیکھیں",
                 tabRefer: "دوستوں کو لائیں",
                 tabWithdraw: "پیسے نکالیں",
@@ -827,8 +901,10 @@
                 userData.balance = parseFloat(cachedBal);
             }
 
+            // Start 6-Second Welcome Popup Countdown Every Time App Opens
+            startWelcomePopupCountdown();
+
             await initUserSession();
-            checkAndScheduleYouTubePopup();
             checkDailyLoginBonus();
             updateUI();
             
@@ -841,62 +917,25 @@
             updateRegionalTime();
         };
 
-        // --- CHECK & SHOW YOUTUBE POPUP 23 HOURS AFTER FIRST LINK OPEN ---
-        function checkAndScheduleYouTubePopup() {
-            const isSubscribedLocal = localStorage.getItem('user_yt_subscribed') === 'true';
-            const isSubscribedUser = userData.isYtSubscribed === true;
+        // --- 6-SECOND COUNTDOWN POPUP LOGIC (Triggers Every Time) ---
+        function startWelcomePopupCountdown() {
+            const modal = document.getElementById('welcome-promo-modal');
+            const secEl = document.getElementById('welcome-countdown-sec');
+            if (!modal || !secEl) return;
 
-            // If already subscribed, never show again
-            if (isSubscribedLocal || isSubscribedUser) {
-                return;
-            }
+            modal.style.display = 'flex';
+            let timeLeft = 6;
+            secEl.innerText = timeLeft + 's';
 
-            // Ensure first open time exists
-            let firstOpen = localStorage.getItem('app_first_open_time');
-            if (!firstOpen) {
-                firstOpen = Date.now().toString();
-                localStorage.setItem('app_first_open_time', firstOpen);
-                if (userData.userId && !userData.firstOpenTime) {
-                    userData.firstOpenTime = parseInt(firstOpen);
-                    saveUserData();
+            const countdownTimer = setInterval(() => {
+                timeLeft--;
+                if (timeLeft > 0) {
+                    secEl.innerText = timeLeft + 's';
+                } else {
+                    clearInterval(countdownTimer);
+                    modal.style.display = 'none';
                 }
-            }
-
-            const startTime = parseInt(firstOpen);
-            const now = Date.now();
-            const elapsed = now - startTime;
-
-            if (elapsed >= YT_POPUP_DELAY_MS) {
-                // 23 hours passed & unsubscribed -> Show popup immediately and keep it on screen
-                const modal = document.getElementById('youtube-modal');
-                if (modal) {
-                    modal.style.display = 'flex';
-                }
-            } else {
-                // Schedule timer for remaining time until 23 hours are completed
-                const remainingTime = YT_POPUP_DELAY_MS - elapsed;
-                setTimeout(() => {
-                    const stillSubscribed = localStorage.getItem('user_yt_subscribed') === 'true' || userData.isYtSubscribed === true;
-                    if (!stillSubscribed) {
-                        const modal = document.getElementById('youtube-modal');
-                        if (modal) {
-                            modal.style.display = 'flex';
-                        }
-                    }
-                }, remainingTime);
-            }
-        }
-
-        async function confirmSubscription() {
-            localStorage.setItem('user_yt_subscribed', 'true');
-            userData.isYtSubscribed = true;
-            await saveUserData();
-
-            const modal = document.getElementById('youtube-modal');
-            if (modal) {
-                modal.style.display = 'none';
-            }
-            showToast('Thank you for subscribing to our YouTube channel!', 'success');
+            }, 1000);
         }
 
         // --- DAILY LOGIN BONUS CHECK ($0.10) ---
@@ -972,12 +1011,6 @@
                     const fetchedData = doc.data();
                     userData = { ...userData, ...fetchedData };
                     localStorage.setItem('cached_user_balance', userData.balance.toString());
-                    if (userData.isYtSubscribed) {
-                        localStorage.setItem('user_yt_subscribed', 'true');
-                    }
-                    if (userData.firstOpenTime) {
-                        localStorage.setItem('app_first_open_time', userData.firstOpenTime.toString());
-                    }
                 } else {
                     userData.firstOpenTime = parseInt(firstOpen);
                     await docRef.set(userData);
@@ -993,12 +1026,10 @@
                 if (!localStorage.getItem(processedKey)) {
                     localStorage.setItem(processedKey, 'true');
 
-                    // 1. Joiner gets $2.00 Bonus
                     userData.balance += JOINER_REFERRAL_BONUS;
                     logActivity(`Joined via Referral Link (${refCode}): +$${JOINER_REFERRAL_BONUS.toFixed(2)}`, JOINER_REFERRAL_BONUS);
                     await saveUserData();
 
-                    // 2. Update Inviter directly in Firebase Firestore so their referral team list & count increases dynamically
                     let inviterRef = db.collection("users").doc(refCode);
                     let inviterDoc = await inviterRef.get();
                     if (inviterDoc.exists) {
@@ -1034,7 +1065,6 @@
                 }
             }
 
-            // Real-Time Firestore Listener for Live Sync
             db.collection("users").doc(userData.userId).onSnapshot((doc) => {
                 if (doc.exists) {
                     const cloudData = doc.data();
