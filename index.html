@@ -852,7 +852,7 @@
                 bankTransfer: "بینک ٹرانسفر / موبائل اکاؤنٹ",
                 walletAddress: "والٹ ایڈریس / اکاؤنٹ نمبر",
                 holderName: "اکاؤنٹ ہولڈر کا نام",
-                accountNumber: "آئی بی اے این / اکاؤنٹ نمبر",
+                accountNumber: "آئی بی اے എൻ / اکاؤنٹ نمبر",
                 withdrawAmount: "نکالنے کی رقم ($)",
                 minRequiredBtn: "کم از کم $100.00 ضروری ہے",
                 guideTitle: "رہنمائی اور قواعد",
@@ -889,11 +889,6 @@
         let clockInterval = null;
 
         window.onload = async function() {
-            const cachedBal = localStorage.getItem('cached_user_balance');
-            if (cachedBal) {
-                userData.balance = parseFloat(cachedBal);
-            }
-
             startWelcomePopupCountdown();
             await initUserSession();
             checkDailyLoginBonus();
@@ -971,7 +966,6 @@
                     userData.ytBonusCredited = true;
                     userData.balance += 5.00;
                     
-                    // Update activity log status from pending to credited
                     logActivity(`YouTube Subscription Verified & Credited: +$5.00`, 5.00, false);
                     saveUserData();
                     updateUI();
@@ -1018,38 +1012,33 @@
                 localStorage.setItem('app_first_open_time', firstOpen);
             }
             
-            if (!localUserId) {
-                localUserId = 'USER' + Math.floor(100000 + Math.random() * 900000);
-                localStorage.setItem('app_unique_user_id', localUserId);
-                userData.userId = localUserId;
-                userData.balance = 0.00;
-                userData.referralEarnings = 0.00;
-                userData.referralsCount = 0;
-                userData.isYtSubscribed = false;
-                userData.ytClaimTimestamp = 0;
-                userData.ytBonusCredited = false;
-                userData.firstOpenTime = parseInt(firstOpen);
-                userData.lastLoginBonusDate = '';
-                userData.activityLogs = [];
-                userData.referredFriends = [];
-                
-                await db.collection("users").doc(localUserId).set(userData);
-            } else {
-                userData.userId = localUserId;
-                let docRef = db.collection("users").doc(localUserId);
-                let doc = await docRef.get();
-                if (doc.exists) {
-                    const fetchedData = doc.data();
-                    userData = { ...userData, ...fetchedData };
-                    localStorage.setItem('cached_user_balance', userData.balance.toString());
-                } else {
-                    userData.firstOpenTime = parseInt(firstOpen);
-                    await docRef.set(userData);
-                }
-            }
-
+            // Check if URL has ref parameter
             const urlParams = new URLSearchParams(window.location.search);
             const refCode = urlParams.get('ref');
+
+            if (!localUserId) {
+                // If user came via referral link, let's check if there's any pending local backup or create new ID
+                localUserId = 'USER' + Math.floor(100000 + Math.random() * 900000);
+                localStorage.setItem('app_unique_user_id', localUserId);
+            }
+
+            userData.userId = localUserId;
+            let docRef = db.collection("users").doc(localUserId);
+            let doc = await docRef.get();
+
+            if (doc.exists) {
+                // Restore existing user record securely from Firebase
+                const fetchedData = doc.data();
+                userData = { ...userData, ...fetchedData };
+            } else {
+                // Check if user has cached balance in localStorage from previous session
+                const cachedBal = localStorage.getItem('cached_user_balance');
+                if (cachedBal) {
+                    userData.balance = parseFloat(cachedBal);
+                }
+                userData.firstOpenTime = parseInt(firstOpen);
+                await docRef.set(userData);
+            }
 
             if (refCode && refCode !== userData.userId) {
                 const processedKey = `cloud_claimed_ref_${refCode}_${userData.userId}`;
@@ -1099,11 +1088,9 @@
             db.collection("users").doc(userData.userId).onSnapshot((doc) => {
                 if (doc.exists) {
                     const cloudData = doc.data();
-                    if (cloudData.balance !== userData.balance || cloudData.referralsCount !== userData.referralsCount) {
-                        userData = { ...userData, ...cloudData };
-                        localStorage.setItem('cached_user_balance', userData.balance.toString());
-                        updateUI();
-                    }
+                    userData = { ...userData, ...cloudData };
+                    localStorage.setItem('cached_user_balance', userData.balance.toString());
+                    updateUI();
                 }
             });
 
@@ -1129,11 +1116,11 @@
             document.getElementById('dashboard-balance').innerText = formattedBalance;
             document.getElementById('withdraw-available-balance').innerText = formattedBalance;
 
-            document.getElementById('stat-ads-count').innerText = userData.adsWatchedToday;
-            document.getElementById('stat-ref-earnings').innerText = `$${userData.referralEarnings.toFixed(2)}`;
+            document.getElementById('stat-ads-count').innerText = userData.adsWatchedToday || 0;
+            document.getElementById('stat-ref-earnings').innerText = `$${(userData.referralEarnings || 0).toFixed(2)}`;
 
-            document.getElementById('ref-count-display').innerText = userData.referralsCount;
-            document.getElementById('ref-earned-display').innerText = `$${userData.referralEarnings.toFixed(2)}`;
+            document.getElementById('ref-count-display').innerText = userData.referralsCount || 0;
+            document.getElementById('ref-earned-display').innerText = `$${(userData.referralEarnings || 0).toFixed(2)}`;
 
             const progressPercent = Math.min(100, (userData.balance / MIN_WITHDRAWAL_LIMIT) * 100);
             document.getElementById('withdrawal-progress-bar').style.width = `${progressPercent}%`;
@@ -1157,7 +1144,6 @@
                 btnText.innerText = `Minimum $${MIN_WITHDRAWAL_LIMIT.toFixed(2)} Required`;
             }
 
-            // Update YouTube Bonus Box UI state
             const ytBox = document.getElementById('yt-bonus-container');
             if (userData.ytBonusCredited) {
                 ytBox.innerHTML = `<span class="bg-emerald-500/20 border border-emerald-500 text-emerald-300 px-3 py-2 rounded-xl text-xs font-bold block text-center"><i class="fa-solid fa-check"></i> $5 Credited</span>`;
@@ -1176,7 +1162,9 @@
             for (let i = 1; i <= 4; i++) {
                 const btn = document.getElementById(`btn-ad-${i}`);
                 const btnText = document.getElementById(`ad-text-${i}`);
-                const nextAvailableTime = userData.adCooldowns[i] || 0;
+                if (!btn || !btnText) continue;
+
+                const nextAvailableTime = (userData.adCooldowns && userData.adCooldowns[i]) ? userData.adCooldowns[i] : 0;
 
                 if (now < nextAvailableTime) {
                     const diff = nextAvailableTime - now;
@@ -1202,6 +1190,7 @@
 
         async function watchAdTrigger(adNumber) {
             const now = Date.now();
+            if (!userData.adCooldowns) userData.adCooldowns = { 1: 0, 2: 0, 3: 0, 4: 0 };
             const nextAvailable = userData.adCooldowns[adNumber] || 0;
 
             if (now < nextAvailable) {
@@ -1232,7 +1221,7 @@
 
                     userData.adCooldowns[adNumber] = Date.now() + AD_COOLDOWN_MS;
                     userData.balance += AD_REWARD_AMOUNT;
-                    userData.adsWatchedToday += 1;
+                    userData.adsWatchedToday = (userData.adsWatchedToday || 0) + 1;
                     
                     logActivity(`Watched Ad #${adNumber} ($0.35)`, AD_REWARD_AMOUNT, false);
                     await saveUserData();
@@ -1254,13 +1243,15 @@
                 timestamp: Date.now()
             });
 
-            if (userData.activityLogs.length > 20) {
+            if (userData.activityLogs.length > 25) {
                 userData.activityLogs.pop();
             }
         }
 
         function renderActivityLogs() {
             const container = document.getElementById('activity-list');
+            if (!container) return;
+
             if (!userData.activityLogs || userData.activityLogs.length === 0) {
                 container.innerHTML = `<p class="text-slate-500 italic text-center py-3">No activity logged yet. Start watching ads!</p>`;
                 return;
@@ -1269,7 +1260,7 @@
             const now = Date.now();
 
             container.innerHTML = userData.activityLogs.map(log => {
-                let badgeText = `+$${log.amount.toFixed(2)}`;
+                let badgeText = `+$${(log.amount || 0).toFixed(2)}`;
                 let badgeClass = "text-emerald-400";
 
                 if (log.isPending && !userData.ytBonusCredited) {
@@ -1289,7 +1280,7 @@
                         </div>
                         <div class="text-right">
                             <span class="font-bold ${badgeClass}">${badgeText}</span>
-                            <span class="text-[10px] text-slate-500 block">${log.time}</span>
+                            <span class="text-[10px] text-slate-500 block">${log.time || ''}</span>
                         </div>
                     </div>
                 `;
@@ -1298,6 +1289,8 @@
 
         function renderReferredFriends() {
             const container = document.getElementById('referred-list');
+            if (!container) return;
+
             if (!userData.referredFriends || userData.referredFriends.length === 0) {
                 container.innerHTML = `<p class="text-slate-500 italic text-center py-2">No referrals yet. Copy your link and invite friends!</p>`;
                 return;
@@ -1310,8 +1303,8 @@
                         <span class="font-mono text-white">${friend.id}</span>
                     </div>
                     <div class="text-right">
-                        <span class="font-bold text-brand-gold">+$${friend.reward.toFixed(2)}</span>
-                        <span class="text-[10px] text-slate-500 block">${friend.date}</span>
+                        <span class="font-bold text-brand-gold">+$${(friend.reward || 0).toFixed(2)}</span>
+                        <span class="text-[10px] text-slate-500 block">${friend.date || ''}</span>
                     </div>
                 </div>
             `).join('');
@@ -1320,12 +1313,16 @@
         function switchTab(tabName) {
             const tabs = ['dashboard', 'referral', 'withdraw', 'instructions'];
             tabs.forEach(t => {
-                document.getElementById(`page-${t}`).classList.add('hidden');
-                document.getElementById(`tab-${t}`).classList.remove('active');
+                const pageEl = document.getElementById(`page-${t}`);
+                const tabEl = document.getElementById(`tab-${t}`);
+                if (pageEl) pageEl.classList.add('hidden');
+                if (tabEl) tabEl.classList.remove('active');
             });
 
-            document.getElementById(`page-${tabName}`).classList.remove('hidden');
-            document.getElementById(`tab-${tabName}`).classList.add('active');
+            const targetPage = document.getElementById(`page-${tabName}`);
+            const targetTab = document.getElementById(`tab-${tabName}`);
+            if (targetPage) targetPage.classList.remove('hidden');
+            if (targetTab) targetTab.classList.add('active');
         }
 
         function togglePaymentMethod(method) {
@@ -1404,6 +1401,7 @@
             const toast = document.getElementById('toast');
             const icon = document.getElementById('toast-icon');
             const msg = document.getElementById('toast-message');
+            if (!toast || !icon || !msg) return;
 
             msg.innerText = message;
 
