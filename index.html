@@ -1011,13 +1011,12 @@
                 firstOpen = Date.now().toString();
                 localStorage.setItem('app_first_open_time', firstOpen);
             }
-            
-            // Check if URL has ref parameter
+
             const urlParams = new URLSearchParams(window.location.search);
             const refCode = urlParams.get('ref');
 
+            // Agar local storage mein ID nahi hai, toh ek naya ID generate karo
             if (!localUserId) {
-                // If user came via referral link, let's check if there's any pending local backup or create new ID
                 localUserId = 'USER' + Math.floor(100000 + Math.random() * 900000);
                 localStorage.setItem('app_unique_user_id', localUserId);
             }
@@ -1027,11 +1026,12 @@
             let doc = await docRef.get();
 
             if (doc.exists) {
-                // Restore existing user record securely from Firebase
+                // Firestore se purana data mil gaya! Load kar lo.
                 const fetchedData = doc.data();
                 userData = { ...userData, ...fetchedData };
+                localStorage.setItem('cached_user_balance', userData.balance.toString());
             } else {
-                // Check if user has cached balance in localStorage from previous session
+                // Agar yeh ID database mein nahi hai, toh database se koi bhi pehla mojooda record ya cached balance check karo
                 const cachedBal = localStorage.getItem('cached_user_balance');
                 if (cachedBal) {
                     userData.balance = parseFloat(cachedBal);
