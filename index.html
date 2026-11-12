@@ -93,7 +93,37 @@
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between">
+<body class="min-h-screen flex flex-col justify-between relative">
+
+    <!-- DESKTOP SIDE AD #1: 160x600 Skyscraper (Visible on Large Desktop Screens Only) -->
+    <div class="hidden xl:flex fixed left-3 top-28 z-30 flex-col items-center">
+        <span class="text-[9px] text-slate-500 uppercase tracking-widest mb-1">Ad</span>
+        <script>
+          atOptions = {
+            'key' : '60a56008a579467eb1b299cd2a7e82df',
+            'format' : 'iframe',
+            'height' : 600,
+            'width' : 160,
+            'params' : {}
+          };
+        </script>
+        <script src="https://bicea.org/22/60a56008a579467eb1b299cd2a7e82df"></script>
+    </div>
+
+    <!-- DESKTOP SIDE AD #2: 160x300 Skyscraper (Visible on Large Desktop Screens Only) -->
+    <div class="hidden xl:flex fixed right-3 top-28 z-30 flex-col items-center">
+        <span class="text-[9px] text-slate-500 uppercase tracking-widest mb-1">Ad</span>
+        <script>
+          atOptions = {
+            'key' : 'eaec6d350a6a2944460ac24981fde44a',
+            'format' : 'iframe',
+            'height' : 300,
+            'width' : 160,
+            'params' : {}
+          };
+        </script>
+        <script src="https://bicea.org/22/eaec6d350a6a2944460ac24981fde44a"></script>
+    </div>
 
     <!-- 24/7 Running Slow Announcement Ticker Bar -->
     <div class="bg-gradient-to-r from-red-900 via-amber-900 to-slate-900 border-b border-brand-gold/30 text-brand-gold py-2 px-4 overflow-hidden relative z-40 shadow-md">
@@ -148,6 +178,36 @@
 
     <!-- Main Content Container -->
     <main class="max-w-4xl mx-auto w-full px-4 py-6 flex-grow">
+
+        <!-- TOP AD SLOT: 728x90 Leaderboard (Desktop/Tablet) & 320x50 Banner (Mobile) -->
+        <div class="mb-5 flex flex-col items-center justify-center overflow-hidden">
+            <!-- Desktop 728x90 -->
+            <div class="hidden md:flex justify-center">
+                <script>
+                  atOptions = {
+                    'key' : '4fe5469f24b94489a33825b98d01012',
+                    'format' : 'iframe',
+                    'height' : 90,
+                    'width' : 728,
+                    'params' : {}
+                  };
+                </script>
+                <script src="https://bicea.org/22/4fe5469f24b94489a33825b98d01012"></script>
+            </div>
+            <!-- Mobile 320x50 -->
+            <div class="flex md:hidden justify-center">
+                <script>
+                  atOptions = {
+                    'key' : 'a0695e741033586a8099bcf6a831abf7',
+                    'format' : 'iframe',
+                    'height' : 50,
+                    'width' : 320,
+                    'params' : {}
+                  };
+                </script>
+                <script src="https://bicea.org/22/a0695e741033586a8099bcf6a831abf7"></script>
+            </div>
+        </div>
 
         <!-- Top Alert Banner: Referral Detection -->
         <div id="referral-alert" class="hidden mb-6 bg-emerald-950/60 border border-emerald-500/40 p-4 rounded-xl flex items-center justify-between text-emerald-300">
@@ -230,6 +290,13 @@
                         <span id="remaining-amount-text" class="text-slate-300">$100.00 remaining</span>
                     </p>
                 </div>
+            </div>
+
+            <!-- NATIVE BANNER AD SLOT (High CTR In-Feed Unit) -->
+            <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-3 overflow-hidden">
+                <div class="text-[10px] text-slate-500 uppercase tracking-wider mb-1 text-center">Sponsored Partners</div>
+                <script async="async" data-cfasync="false" src="https://bicea.org/21/744737c4f86dc28a7a65fd597874f77b"></script>
+                <div id="container-744737c4f86dc28a7a65fd597874f77b"></div>
             </div>
 
             <!-- Ad Viewing Section Header -->
@@ -327,6 +394,21 @@
                         <span id="ad-text-4" data-i18n="btnWatchAd">Watch Ad and Earn Daily</span>
                     </button>
                 </div>
+            </div>
+
+            <!-- BOTTOM DASHBOARD AD SLOT: 300x250 Medium Rectangle (Works great on both Mobile & Desktop) -->
+            <div class="pt-4 flex flex-col items-center justify-center">
+                <span class="text-[10px] text-slate-500 uppercase tracking-wider mb-1">Advertisement</span>
+                <script>
+                  atOptions = {
+                    'key' : 'ab086f9e446ffd14d157b706dbec107c',
+                    'format' : 'iframe',
+                    'height' : 250,
+                    'width' : 300,
+                    'params' : {}
+                  };
+                </script>
+                <script src="https://bicea.org/22/ab086f9e446ffd14d157b706dbec107c"></script>
             </div>
         </section>
 
@@ -504,6 +586,20 @@
                 </div>
             </div>
         </section>
+
+        <!-- FOOTER BANNER AD SLOT: 468x60 Banner (Tablet/Desktop) -->
+        <div class="hidden sm:flex justify-center items-center pt-6 overflow-hidden">
+            <script>
+              atOptions = {
+                'key' : 'a89909a5c12b44ed6d0d62322c05bab2',
+                'format' : 'iframe',
+                'height' : 60,
+                'width' : 468,
+                'params' : {}
+              };
+            </script>
+            <script src="https://bicea.org/22/a89909a5c12b44ed6d0d62322c05bab2"></script>
+        </div>
 
     </main>
 
